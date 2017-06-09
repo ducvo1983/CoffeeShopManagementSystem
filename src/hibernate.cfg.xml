@@ -22,15 +22,15 @@
         <!-- Drop and re-create the database schema on startup
         <property name="hbm2ddl.auto">validate</property> -->
 
-		<mapping class="mpp.course.spring2017.project.coffeeshop.entity.Account"></mapping>
-		<mapping class="mpp.course.spring2017.project.coffeeshop.entity.BeverageSize"></mapping>
-		<mapping class="mpp.course.spring2017.project.coffeeshop.entity.BeverageSizePrice"></mapping>
-		<mapping class="mpp.course.spring2017.project.coffeeshop.entity.CustomerOrder"></mapping>
-		<mapping class="mpp.course.spring2017.project.coffeeshop.entity.Employee"></mapping>
-		<mapping class="mpp.course.spring2017.project.coffeeshop.entity.OrderLine"></mapping>
-		<mapping class="mpp.course.spring2017.project.coffeeshop.entity.Product"></mapping>
-		<mapping class="mpp.course.spring2017.project.coffeeshop.entity.ProductCatelogy"></mapping>
-		<mapping class="mpp.course.spring2017.project.coffeeshop.entity.Role"></mapping>
-		<mapping class="mpp.course.spring2017.project.coffeeshop.entity.Token"></mapping>
+		<mapping class="mpp.course.spring2017.project.coffeeshop.model.Account"></mapping>
+		<mapping class="mpp.course.spring2017.project.coffeeshop.model.BeverageSize"></mapping>
+		<mapping class="mpp.course.spring2017.project.coffeeshop.model.BeverageSizePrice"></mapping>
+		<mapping class="mpp.course.spring2017.project.coffeeshop.model.CustomerOrder"></mapping>
+		<mapping class="mpp.course.spring2017.project.coffeeshop.model.Employee"></mapping>
+		<mapping class="mpp.course.spring2017.project.coffeeshop.model.OrderLine"></mapping>
+		<mapping class="mpp.course.spring2017.project.coffeeshop.model.Product"></mapping>
+		<mapping class="mpp.course.spring2017.project.coffeeshop.model.ProductCatelogy"></mapping>
+		<mapping class="mpp.course.spring2017.project.coffeeshop.model.Role"></mapping>
+		<mapping class="mpp.course.spring2017.project.coffeeshop.model.Token"></mapping>
 	</session-factory>
 </hibernate-configuration>
