@@ -6,7 +6,7 @@ import org.hibernate.Session;
 
 import mpp.course.spring2017.project.coffeeshop.model.Employee;
 
-public class EmployeeDaoImpl implements EmployeeDao {
+public class EmployeeDaoImpl implements IEmployeeDao {
 
 	@Override
 	public boolean newEmployee(Employee e) {
@@ -70,11 +70,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		
 		try {
 			ss.beginTransaction();
-			
-			Employee tmpEmp = findEmployee(emp.getID());
-			tmpEmp = emp;
-			ss.update(tmpEmp);
-			
+			ss.update(emp);			
 			ss.getTransaction().commit();
 			flag = true;
 		} catch (Exception ex) {
