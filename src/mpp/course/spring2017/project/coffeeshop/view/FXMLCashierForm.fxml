@@ -5,80 +5,108 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
-  <tabs>
-    <Tab text="Soft drink">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+<SplitPane dividerPositions="0.506265664160401" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mpp.course.spring2017.project.coffeeshop.controller.CashierController">
+  <items>
+    <AnchorPane fx:id="firstAnchorPane" maxWidth="380.0" minHeight="0.0" minWidth="380.0" prefWidth="380.0">
+         <children>
+            <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" percentHeight="50.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" percentHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" percentHeight="20.0" vgrow="SOMETIMES" />
+               </rowConstraints>
                <children>
-                  <GridPane id="gridBaverage" prefHeight="361.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <GridPane GridPane.rowIndex="1">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
-                  </GridPane>
-               </children></AnchorPane>
-      </content>
-    </Tab>
-    <Tab text="Stimulant drink">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-      </content>
-    </Tab>
-      <Tab text="Fruit drink">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <GridPane id="gridBaverage" prefHeight="361.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <ImageView fitHeight="118.0" fitWidth="147.0" pickOnBounds="true" preserveRatio="true" />
+                        <Label text="Customer" />
+                        <Label text="Token" GridPane.rowIndex="2" />
+                        <TextField fx:id="txtCustomer" GridPane.columnIndex="1" />
+                        <ComboBox fx:id="cboToken" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Tax" GridPane.rowIndex="3" />
+                        <Label fx:id="lblTax" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Total" GridPane.rowIndex="4" />
+                        <Label fx:id="lblTotal" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label text="Getting way" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cboGettingWay" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
                   </GridPane>
-               </children>
-            </AnchorPane>
-         </content>
-      </Tab>
-      <Tab text="Food">
-         <content>
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <GridPane id="gridBaverage" prefHeight="361.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
                      <children>
-                        <ImageView fitHeight="118.0" fitWidth="147.0" pickOnBounds="true" preserveRatio="true" />
+                        <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#handleLogoutButtonAction" text="Logout" />
+                        <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Cancel" />
+                        <Button fx:id="btnOrder" mnemonicParsing="false" onAction="#handleOrderButtonAction" text="Order" />
+                        <Button fx:id="btnNew" mnemonicParsing="false" onAction="#handleNewButtonAction" text="New" />
                      </children>
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                  </GridPane>
+                  </HBox>
+                  <TableView id="tblOrderLine" fx:id="tblOrderLine" editable="true" prefHeight="250.0">
+                    <columns>
+                      <TableColumn fx:id="colProduct" editable="false" prefWidth="75.0" text="Product" />
+                      <TableColumn fx:id="colSize" prefWidth="75.0" text="Size" />
+                        <TableColumn fx:id="colPrice" editable="false" prefWidth="75.0" text="Price" />
+                        <TableColumn fx:id="colQuantity" prefWidth="75.0" text="Quantity" />
+                        <TableColumn fx:id="colDeleteButton" prefWidth="75.0" />
+                    </columns>
+                  </TableView>
                </children>
-            </AnchorPane>
-         </content>
-      </Tab>
-  </tabs>
-</TabPane>
+            </GridPane>
+         </children></AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="200.0">
+         <children>
+            <TabPane prefHeight="398.0" prefWidth="390.0" stylesheets="@tabpane.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <tabs>
+                <Tab fx:id="tabStimulantDrink" onSelectionChanged="#handleSelectionChanged" text="Stimulant drink">
+                  <content>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" prefViewportHeight="365.0" prefViewportWidth="390.0" vbarPolicy="ALWAYS">
+                           <content>
+                              <GridPane id="gridStimulantDrink" fx:id="gridStimulantDrink" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              </GridPane>
+                           </content>
+                        </ScrollPane>
+                  </content>
+                </Tab>
+                  <Tab fx:id="tabFruitDrink" onSelectionChanged="#handleSelectionChanged" text="Fruit drink">
+                     <content>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" prefViewportHeight="365.0" prefViewportWidth="390.0" vbarPolicy="ALWAYS">
+                           <content>
+                              <GridPane id="gridStimulantDrink" fx:id="gridFruitDrink" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </content>
+                        </ScrollPane>
+                     </content>
+                  </Tab>
+                  <Tab fx:id="tabSoftDrink" onSelectionChanged="#handleSelectionChanged" text="Soft drink">
+                     <content>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" prefViewportHeight="365.0" prefViewportWidth="390.0" vbarPolicy="ALWAYS">
+                           <content>
+                              <GridPane id="gridStimulantDrink" fx:id="gridSoftDrink" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </content>
+                        </ScrollPane>
+                     </content>
+                  </Tab>
+                  <Tab fx:id="tabFood" onSelectionChanged="#handleSelectionChanged" text="Food">
+                     <content>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" prefViewportHeight="365.0" prefViewportWidth="390.0" vbarPolicy="ALWAYS">
+                           <content>
+                              <GridPane id="gridStimulantDrink" fx:id="gridFood" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </content>
+                        </ScrollPane>
+                     </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </children></AnchorPane>
+  </items>
+</SplitPane>

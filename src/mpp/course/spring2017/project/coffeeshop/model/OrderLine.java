@@ -35,7 +35,7 @@ public class OrderLine implements Serializable {
 	@JoinColumn(name="BEVERAGE_SIZE", nullable=true)
 	private BeverageSize beverageSize;*/
 	@Column(name="BEVERAGE_SIZE", nullable=true)
-	private Character beverageSize;
+	private String beverageSize;
 	
 	@Column(name="QUANTITY")
 	private int quantity;
@@ -86,11 +86,11 @@ public class OrderLine implements Serializable {
 		this.price = price;
 	}
 
-	public Character getBeverageSize() {
+	public String getBeverageSize() {
 		return beverageSize;
 	}
 
-	public void setBeverageSize(Character beverageSize) {
+	public void setBeverageSize(String beverageSize) {
 		this.beverageSize = beverageSize;
 	}
 }

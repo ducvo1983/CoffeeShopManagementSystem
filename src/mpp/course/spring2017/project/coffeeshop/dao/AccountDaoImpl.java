@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import mpp.course.spring2017.project.coffeeshop.model.Employee;
+import mpp.course.spring2017.project.coffeeshop.model.Account;
 
-class EmployeeDaoImpl implements IEmployeeDao {
+class AccountDaoImpl implements IAccountDao {
 
 	@Override
-	public boolean newEmployee(Employee e) {
+	public boolean newAccount(Account e) {
 		boolean flag = false;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
@@ -28,13 +28,13 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public List<Employee> getAllEmployees() {
-		List<Employee> result = null;
+	public List<Account> getAllAccounts() {
+		List<Account> result = null;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			result = ss.createQuery("from Employee", Employee.class).getResultList();
+			result = ss.createQuery("from Account", Account.class).getResultList();
 			ss.getTransaction().commit();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -46,13 +46,13 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public Employee findEmployee(int ID) {
-		Employee emp = null;
+	public Account findAccount(String userName) {
+		Account emp = null;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {	
 			ss.beginTransaction();
-			emp = ss.createQuery("from Employee where ID = " + ID, Employee.class).getSingleResult();
+			emp = ss.createQuery("from Account where USER_NAME = '" + userName + "'", Account.class).getSingleResult();
 			ss.getTransaction().commit();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -64,16 +64,14 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 	
 	@Override
-	public boolean updateEmployee(Employee emp) {
+	public boolean updateAccount(Account emp) {
 		boolean flag = false;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
 			
-			Employee tmpEmp = findEmployee(emp.getID());
-			tmpEmp = emp;
-			ss.update(tmpEmp);
+			ss.update(emp);
 			
 			ss.getTransaction().commit();
 			flag = true;
@@ -87,7 +85,7 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public boolean deleteEmployee(Employee emp) {
+	public boolean deleteAccount(Account emp) {
 		boolean flag = false;
 		Session ss=HibernateFactory.getInstance().openSession();
 		

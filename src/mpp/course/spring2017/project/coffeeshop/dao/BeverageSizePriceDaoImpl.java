@@ -4,18 +4,20 @@ import java.util.List;
 
 import org.hibernate.Session;
 
+import mpp.course.spring2017.project.coffeeshop.model.BeverageSize;
+import mpp.course.spring2017.project.coffeeshop.model.BeverageSizePrice;
 import mpp.course.spring2017.project.coffeeshop.model.Employee;
 
-class EmployeeDaoImpl implements IEmployeeDao {
+class BeverageSizePriceDaoImpl implements IBeverageSizePriceDao {
 
 	@Override
-	public boolean newEmployee(Employee e) {
+	public boolean newBeverageSizePrice(BeverageSizePrice s) {
 		boolean flag = false;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			ss.save(e);
+			ss.save(s);
 			ss.getTransaction().commit();
 			flag = true;
 		} catch (Exception ex) {
@@ -28,13 +30,13 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public List<Employee> getAllEmployees() {
-		List<Employee> result = null;
+	public List<BeverageSizePrice> getAllBeverageSizePrices() {
+		List<BeverageSizePrice> result = null;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			result = ss.createQuery("from Employee", Employee.class).getResultList();
+			result = ss.createQuery("from BeverageSizePrice", BeverageSizePrice.class).getResultList();
 			ss.getTransaction().commit();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -46,13 +48,53 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public Employee findEmployee(int ID) {
-		Employee emp = null;
+	public boolean updateBeverageSizePrice(BeverageSizePrice bs) {
+		boolean flag = false;
+		Session ss=HibernateFactory.getInstance().openSession();
+		
+		try {
+			ss.beginTransaction();
+			
+			ss.update(bs);
+			
+			ss.getTransaction().commit();
+			flag = true;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		} finally {
+			ss.close();
+		}
+
+		return flag;
+	}
+
+	@Override
+	public boolean deleteBeverageSizePrice(BeverageSizePrice bs) {
+		boolean flag = false;
+		Session ss=HibernateFactory.getInstance().openSession();
+		
+		try {
+			ss.beginTransaction();
+			ss.delete(bs);			
+			ss.getTransaction().commit();
+			flag = true;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		} finally {
+			ss.close();
+		}
+
+		return flag;
+	}
+
+	@Override
+	public BeverageSizePrice findBeverageSizePrice(int pID, int sizeID) {
+		BeverageSizePrice bs = null;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {	
 			ss.beginTransaction();
-			emp = ss.createQuery("from Employee where ID = " + ID, Employee.class).getSingleResult();
+			bs = ss.createQuery("from BeverageSizePrice where PRODUCT_ID = " + pID + " AND SIZE_ID = " + sizeID, BeverageSizePrice.class).getSingleResult();
 			ss.getTransaction().commit();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -60,48 +102,24 @@ class EmployeeDaoImpl implements IEmployeeDao {
 			ss.close();
 		}
 		
-		return emp;
+		return bs;
 	}
-	
+
 	@Override
-	public boolean updateEmployee(Employee emp) {
-		boolean flag = false;
+	public List<BeverageSizePrice> getBeverageSizePrices(int pID) {
+		List<BeverageSizePrice> result = null;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			
-			Employee tmpEmp = findEmployee(emp.getID());
-			tmpEmp = emp;
-			ss.update(tmpEmp);
-			
+			result = ss.createQuery("from BeverageSizePrice where PRODUCT_ID = " + pID, BeverageSizePrice.class).getResultList();
 			ss.getTransaction().commit();
-			flag = true;
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		} finally {
 			ss.close();
 		}
-
-		return flag;
-	}
-
-	@Override
-	public boolean deleteEmployee(Employee emp) {
-		boolean flag = false;
-		Session ss=HibernateFactory.getInstance().openSession();
 		
-		try {
-			ss.beginTransaction();
-			ss.delete(emp);			
-			ss.getTransaction().commit();
-			flag = true;
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
-		} finally {
-			ss.close();
-		}
-
-		return flag;
+		return result;
 	}
 }
