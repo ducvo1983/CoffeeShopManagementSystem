@@ -46,6 +46,17 @@ public class CustomerOrder {
 	@JoinColumn(name="ACCOUNT_ID")
 	private Account account;
 
+	@Column(name="ORDER_TYPE", nullable=true)
+	private String orderType;
+	
+	public String getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(String orderType) {
+		this.orderType = orderType;
+	}
+
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="customerOrder")
 	private List<OrderLine> listOrderLine;
 		

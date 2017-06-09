@@ -95,4 +95,8 @@ public class Product {
 	public void setUpdateDate(LocalDate updateDate) {
 		this.updateDate = updateDate;
 	}
+	@Override
+	public String toString() {
+		return name;
+	}
 }
