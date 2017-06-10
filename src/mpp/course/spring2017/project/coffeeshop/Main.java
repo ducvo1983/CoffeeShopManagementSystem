@@ -1,9 +1,9 @@
 package mpp.course.spring2017.project.coffeeshop;
 	
 import javafx.application.Application;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 
 public class Main extends Application {

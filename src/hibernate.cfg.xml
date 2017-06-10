@@ -6,7 +6,7 @@
    	<session-factory>
         <!-- Database connection settings -->
         <property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
-        <property name="connection.url">jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=127.0.0.1)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XE)))</property>
+        <property name="connection.url">jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcp)(HOST=10.0.0.22)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XE)))</property>
         <property name="connection.username">coffeeshop</property>
         <property name="connection.password">coffeeshop</property>
 

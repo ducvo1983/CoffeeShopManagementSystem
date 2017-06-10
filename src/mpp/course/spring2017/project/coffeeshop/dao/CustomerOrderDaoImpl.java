@@ -4,12 +4,12 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import mpp.course.spring2017.project.coffeeshop.model.Employee;
+import mpp.course.spring2017.project.coffeeshop.model.CustomerOrder;
 
-class EmployeeDaoImpl implements IEmployeeDao {
+class CustomerOrderDaoImpl implements ICustomerOrderDao {
 
 	@Override
-	public boolean newEmployee(Employee e) {
+	public boolean newCustomerOrder(CustomerOrder e) {
 		boolean flag = false;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
@@ -28,13 +28,13 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public List<Employee> getAllEmployees() {
-		List<Employee> result = null;
+	public List<CustomerOrder> getAllCustomerOrders() {
+		List<CustomerOrder> result = null;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			result = ss.createQuery("from Employee", Employee.class).getResultList();
+			result = ss.createQuery("from CustomerOrder", CustomerOrder.class).getResultList();
 			ss.getTransaction().commit();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -46,13 +46,13 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public Employee findEmployee(int ID) {
-		Employee emp = null;
+	public CustomerOrder findCustomerOrder(String orderNo) {
+		CustomerOrder o = null;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {	
 			ss.beginTransaction();
-			emp = ss.createQuery("from Employee where ID = " + ID, Employee.class).getSingleResult();
+			o = ss.createQuery("from CustomerOrder where ORDER_NO = '" + orderNo + "'", CustomerOrder.class).getSingleResult();
 			ss.getTransaction().commit();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -60,17 +60,19 @@ class EmployeeDaoImpl implements IEmployeeDao {
 			ss.close();
 		}
 		
-		return emp;
+		return o;
 	}
 	
 	@Override
-	public boolean updateEmployee(Employee emp) {
+	public boolean updateCustomerOrder(CustomerOrder o) {
 		boolean flag = false;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			ss.update(emp);			
+			
+			ss.update(o);
+			
 			ss.getTransaction().commit();
 			flag = true;
 		} catch (Exception ex) {
@@ -83,13 +85,13 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public boolean deleteEmployee(Employee emp) {
+	public boolean deleteCustomerOrder(CustomerOrder o) {
 		boolean flag = false;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			ss.delete(emp);			
+			ss.delete(o);			
 			ss.getTransaction().commit();
 			flag = true;
 		} catch (Exception ex) {

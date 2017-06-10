@@ -4,18 +4,18 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import mpp.course.spring2017.project.coffeeshop.model.Employee;
+import mpp.course.spring2017.project.coffeeshop.model.Token;
 
-class EmployeeDaoImpl implements IEmployeeDao {
+class TokenDaoImpl implements ITokenDao {
 
 	@Override
-	public boolean newEmployee(Employee e) {
+	public boolean newToken(Token s) {
 		boolean flag = false;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			ss.save(e);
+			ss.save(s);
 			ss.getTransaction().commit();
 			flag = true;
 		} catch (Exception ex) {
@@ -28,13 +28,13 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public List<Employee> getAllEmployees() {
-		List<Employee> result = null;
+	public List<Token> getAllTokens() {
+		List<Token> result = null;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			result = ss.createQuery("from Employee", Employee.class).getResultList();
+			result = ss.createQuery("from Token", Token.class).getResultList();
 			ss.getTransaction().commit();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -46,13 +46,53 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public Employee findEmployee(int ID) {
-		Employee emp = null;
+	public boolean updateToken(Token bs) {
+		boolean flag = false;
+		Session ss=HibernateFactory.getInstance().openSession();
+		
+		try {
+			ss.beginTransaction();
+			
+			ss.update(bs);
+			
+			ss.getTransaction().commit();
+			flag = true;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		} finally {
+			ss.close();
+		}
+
+		return flag;
+	}
+
+	@Override
+	public boolean deleteToken(Token bs) {
+		boolean flag = false;
+		Session ss=HibernateFactory.getInstance().openSession();
+		
+		try {
+			ss.beginTransaction();
+			ss.delete(bs);			
+			ss.getTransaction().commit();
+			flag = true;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		} finally {
+			ss.close();
+		}
+
+		return flag;
+	}
+
+	@Override
+	public Token findToken(int ID) {
+		Token bs = null;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {	
 			ss.beginTransaction();
-			emp = ss.createQuery("from Employee where ID = " + ID, Employee.class).getSingleResult();
+			bs = ss.createQuery("from Token where ID = " + ID, Token.class).getSingleResult();
 			ss.getTransaction().commit();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -60,44 +100,7 @@ class EmployeeDaoImpl implements IEmployeeDao {
 			ss.close();
 		}
 		
-		return emp;
-	}
-	
-	@Override
-	public boolean updateEmployee(Employee emp) {
-		boolean flag = false;
-		Session ss=HibernateFactory.getInstance().openSession();
-		
-		try {
-			ss.beginTransaction();
-			ss.update(emp);			
-			ss.getTransaction().commit();
-			flag = true;
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
-		} finally {
-			ss.close();
-		}
-
-		return flag;
+		return bs;
 	}
 
-	@Override
-	public boolean deleteEmployee(Employee emp) {
-		boolean flag = false;
-		Session ss=HibernateFactory.getInstance().openSession();
-		
-		try {
-			ss.beginTransaction();
-			ss.delete(emp);			
-			ss.getTransaction().commit();
-			flag = true;
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
-		} finally {
-			ss.close();
-		}
-
-		return flag;
-	}
 }

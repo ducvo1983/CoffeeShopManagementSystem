@@ -4,18 +4,18 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import mpp.course.spring2017.project.coffeeshop.model.Employee;
+import mpp.course.spring2017.project.coffeeshop.model.OrderLine;
 
-class EmployeeDaoImpl implements IEmployeeDao {
+class OrderLineDaoImpl implements IOrderLineDao {
 
 	@Override
-	public boolean newEmployee(Employee e) {
+	public boolean newOrderLine(OrderLine ol) {
 		boolean flag = false;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			ss.save(e);
+			ss.save(ol);
 			ss.getTransaction().commit();
 			flag = true;
 		} catch (Exception ex) {
@@ -28,13 +28,13 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public List<Employee> getAllEmployees() {
-		List<Employee> result = null;
+	public List<OrderLine> getAllOrderLines() {
+		List<OrderLine> result = null;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			result = ss.createQuery("from Employee", Employee.class).getResultList();
+			result = ss.createQuery("from OrderLine", OrderLine.class).getResultList();
 			ss.getTransaction().commit();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -46,13 +46,13 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public Employee findEmployee(int ID) {
-		Employee emp = null;
+	public OrderLine findOrderLine(String orderNo, int productID) {
+		OrderLine o = null;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {	
 			ss.beginTransaction();
-			emp = ss.createQuery("from Employee where ID = " + ID, Employee.class).getSingleResult();
+			o = ss.createQuery("from OrderLine where ORDER_NO = '" + orderNo + "' AND PRODUCT_ID = " + productID, OrderLine.class).getSingleResult();
 			ss.getTransaction().commit();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
@@ -60,17 +60,18 @@ class EmployeeDaoImpl implements IEmployeeDao {
 			ss.close();
 		}
 		
-		return emp;
+		return o;
 	}
 	
 	@Override
-	public boolean updateEmployee(Employee emp) {
+	public boolean updateOrderLine(OrderLine o) {
 		boolean flag = false;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			ss.update(emp);			
+			ss.update(o);
+			
 			ss.getTransaction().commit();
 			flag = true;
 		} catch (Exception ex) {
@@ -83,13 +84,13 @@ class EmployeeDaoImpl implements IEmployeeDao {
 	}
 
 	@Override
-	public boolean deleteEmployee(Employee emp) {
+	public boolean deleteOrderLine(OrderLine o) {
 		boolean flag = false;
 		Session ss=HibernateFactory.getInstance().openSession();
 		
 		try {
 			ss.beginTransaction();
-			ss.delete(emp);			
+			ss.delete(o);			
 			ss.getTransaction().commit();
 			flag = true;
 		} catch (Exception ex) {
@@ -99,5 +100,23 @@ class EmployeeDaoImpl implements IEmployeeDao {
 		}
 
 		return flag;
+	}
+
+	@Override
+	public List<OrderLine> getOrderLines(String orderNo) {
+		List<OrderLine> result = null;
+		Session ss=HibernateFactory.getInstance().openSession();
+		
+		try {
+			ss.beginTransaction();
+			result = ss.createQuery("from OrderLine where ORDER_NO = '" + orderNo + "'", OrderLine.class).getResultList();
+			ss.getTransaction().commit();
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		} finally {
+			ss.close();
+		}
+		
+		return result;
 	}
 }

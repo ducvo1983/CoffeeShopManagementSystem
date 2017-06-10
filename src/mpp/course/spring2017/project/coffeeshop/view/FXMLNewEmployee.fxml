@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane alignment="center" hgap="10" prefHeight="366.0" prefWidth="419.0" styleClass="root" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mpp.course.spring2017.project.coffeeshop.controller.EmployeeController">
+   <children>
+      <Label text="First Name" GridPane.rowIndex="1" />
+      <TextField fx:id="txtFirstName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextField fx:id="txtLastName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Label text="Date Of Birth" GridPane.rowIndex="3" />
+      <DatePicker fx:id="datePickerDOB" prefHeight="25.0" prefWidth="209.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <Label text="Phone" GridPane.rowIndex="4" />
+      <TextField fx:id="txtPhone" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <TextField fx:id="txtAddress" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <Label text="Address" GridPane.rowIndex="5" />
+      <Label text="Account ID" GridPane.rowIndex="6" />
+      <TextField fx:id="txtAccountID" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <Label text="Password" GridPane.rowIndex="7" />
+      <PasswordField fx:id="txtPassword" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+      <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="9">
+         <children>
+            <Button fx:id="btnCreate" mnemonicParsing="false" onAction="#handleCreateAction" text="Create" />
+            <Button fx:id="btnReset" onAction="#handleResetAction" text="Reset" />
+         </children>
+      </HBox>
+      <Label text="Group" GridPane.rowIndex="8" />
+      <ChoiceBox fx:id="chBoxGroup" prefHeight="25.0" prefWidth="209.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+      <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+      <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+      <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+      <Label text="Last Name" GridPane.rowIndex="2" />
+      <Label fx:id="lblErrorMsg" text="error" textFill="RED" visible="false" GridPane.columnIndex="1" />
+   </children>
+   <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <padding>
+      <Insets bottom="10" left="25" right="25" top="25" />
+   </padding>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+   <stylesheets>
+      <URL value="@Login.css" />
+   </stylesheets>
+</GridPane>
