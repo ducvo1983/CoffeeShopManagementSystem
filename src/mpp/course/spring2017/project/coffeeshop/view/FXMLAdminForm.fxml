@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.text.*?>
+
+<SplitPane dividerPositions="0.29797979797979796" prefHeight="481.0" prefWidth="561.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mpp.course.spring2017.project.coffeeshop.controller.AdminController">
+   <items>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="479.0" prefWidth="188.0" SplitPane.resizableWithParent="false">
+         <children>
+            <Accordion layoutY="101.0" prefHeight="378.0" prefWidth="148.0">
+               <panes>
+                  <TitledPane animated="false" prefHeight="136.0" prefWidth="202.0" text="Employee Management">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Button id="btnNewEmployee" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#newEmployee" prefHeight="25.0" prefWidth="112.0" text="New Employee" />
+                              <Button fx:id="btnViewEmployee" layoutX="14.0" layoutY="56.0" mnemonicParsing="false" onAction="#viewEmployees" prefHeight="25.0" prefWidth="112.0" text="View Employee" />
+                              <Button fx:id="btnUpdateEmployee" layoutX="14.0" layoutY="99.0" mnemonicParsing="false" onAction="#updateEmployee" prefHeight="25.0" prefWidth="113.0" text="Update Employee" />
+                           </children></AnchorPane>
+                     </content>
+                  </TitledPane>
+                  <TitledPane animated="false" prefHeight="158.0" prefWidth="202.0" text="Product Management">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="btnListProduct" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#listProducts" prefHeight="25.0" prefWidth="112.0" text="List Product" />
+                           </children></AnchorPane>
+                     </content>
+                  </TitledPane>
+                  <TitledPane animated="false" text="untitled 3">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                     </content>
+                  </TitledPane>
+               </panes>
+            </Accordion>
+            <ImageView fitHeight="99.0" fitWidth="164.0" pickOnBounds="true" smooth="false">
+               <image>
+                  <Image url="@images/coffee.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="479.0" prefWidth="325.0">
+         <children>
+            <BorderPane fx:id="contentPane" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children></AnchorPane>
+   </items>
+</SplitPane>

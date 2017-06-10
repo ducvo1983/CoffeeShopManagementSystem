@@ -18,7 +18,7 @@ public class Account {
 	@Column(name="PASSWORD")
 	private String password;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "ROLE_ID")
 	private Role role;
 	

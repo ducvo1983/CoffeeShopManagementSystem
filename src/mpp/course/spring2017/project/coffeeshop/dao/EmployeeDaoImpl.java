@@ -70,11 +70,7 @@ class EmployeeDaoImpl implements IEmployeeDao {
 		
 		try {
 			ss.beginTransaction();
-			
-			Employee tmpEmp = findEmployee(emp.getID());
-			tmpEmp = emp;
-			ss.update(tmpEmp);
-			
+			ss.update(emp);			
 			ss.getTransaction().commit();
 			flag = true;
 		} catch (Exception ex) {
