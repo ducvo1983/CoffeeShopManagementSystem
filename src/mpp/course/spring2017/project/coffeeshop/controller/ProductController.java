@@ -47,7 +47,7 @@ import mpp.course.spring2017.project.coffeeshop.model.Product;
 import mpp.course.spring2017.project.coffeeshop.model.ProductCatelogy;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopButton;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopMenuItem;
-import mpp.course.spring2017.project.coffeeshop.view.ShopCoffeeUtils;
+import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopUtils;
 
 public class ProductController implements Initializable {
 	private final int COLS = 5;
@@ -175,7 +175,7 @@ public class ProductController implements Initializable {
 		chBoxCategory.getSelectionModel().select(index);
     	createdDatePicker.setValue(p.getCreateDate());
     	updatedDatePicker.setValue(p.getUpdateDate());
-    	imageProduct.setImage(ShopCoffeeUtils.convertByteArray2JavaFXImage(p.getImage(), 100, 100));
+    	imageProduct.setImage(CoffeeShopUtils.convertByteArray2JavaFXImage(p.getImage(), 100, 100));
     	
     	List<BeverageSizePrice> listSizePrice = BeverageSizePriceDaoFactory.getInstance().getBeverageSizePrices(p.getID());
     	if(listSizePrice != null) {
@@ -214,7 +214,7 @@ public class ProductController implements Initializable {
 			for (int j = 0; j < COLS; j++) {
 				if (pos >= products.size()) break;
 				Product p = products.get(pos++);
-				Button btn = new CoffeeShopButton(p.getName(), new ImageView(ShopCoffeeUtils.convertByteArray2JavaFXImage(p.getImage(), 100,100)), p);
+				Button btn = new CoffeeShopButton(p.getName(), new ImageView(CoffeeShopUtils.convertByteArray2JavaFXImage(p.getImage(), 100,100)), p);
 				//btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 				btn.setContentDisplay(ContentDisplay.TOP);
 				ContextMenu contextMenu = new ContextMenu();
@@ -259,7 +259,7 @@ public class ProductController implements Initializable {
 			imageChooser.setTitle("Open Resource File");
 			File file = imageChooser.showOpenDialog(rootSplitPane.getScene().getWindow());
 			if(file != null) {
-				imageProduct.setImage(ShopCoffeeUtils.convertByteArray2JavaFXImage(Files.readAllBytes(file.toPath()), 100, 100));
+				imageProduct.setImage(CoffeeShopUtils.convertByteArray2JavaFXImage(Files.readAllBytes(file.toPath()), 100, 100));
 			}
 			
 		} catch (Exception ex) {

@@ -92,7 +92,9 @@ public class CoffeeShopLoginController {
 	    		}
 	    		cashierView.show("Welcome " + acct.getUserName());
 	    		FXMLLoader loader = cashierView.getLoader();
-	    		((CashierController) loader.getController()).setLoginView(coffeeShopLoginView);
+	    		CashierController controller = (CashierController) loader.getController();
+	    		controller.setLoginView(coffeeShopLoginView);
+	    		controller.setLoginAccount(acct);
 	    	}
 	    		return true;
 	    	case CHEF_ROLE:
@@ -103,7 +105,9 @@ public class CoffeeShopLoginController {
 	    		}
 	    		chefBartenderView.show("Welcome " + acct.getUserName());
 	    		FXMLLoader loader = chefBartenderView.getLoader();
-	    		((ChefBartenderController) loader.getController()).setLoginView(coffeeShopLoginView);
+	    		ChefBartenderController controller = (ChefBartenderController) loader.getController();
+	    		controller.setLoginView(coffeeShopLoginView);
+	    		//controller.setLoginAccount(acct);
 	    	}
 	    		return true;
 	    	}
