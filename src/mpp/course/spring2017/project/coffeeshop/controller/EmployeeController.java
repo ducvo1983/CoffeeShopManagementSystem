@@ -60,6 +60,7 @@ public class EmployeeController implements Initializable {
 		txtAccountID.setText("");
 		txtPassword.setText("");
 		lblErrorMsg.setText("");
+		lblErrorMsg.setVisible(false);
 	}
 	
 	private boolean validateForm() {

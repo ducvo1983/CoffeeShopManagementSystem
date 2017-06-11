@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 
+import mpp.course.spring2017.project.coffeeshop.model.BeverageSizePrice;
 import mpp.course.spring2017.project.coffeeshop.model.Product;
 
 class ProductDaoImpl implements IProductDao {
@@ -51,11 +52,13 @@ class ProductDaoImpl implements IProductDao {
 		
 		try {
 			ss.beginTransaction();
+			ss.createQuery("delete BeverageSizePrice where PRODUCT_ID=" + p.getID()).executeUpdate();
 			ss.update(p);
 			ss.getTransaction().commit();
 			flag = true;
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
+			ss.getTransaction().rollback();
 		} finally {
 			ss.close();
 		}
@@ -70,11 +73,13 @@ class ProductDaoImpl implements IProductDao {
 		
 		try {
 			ss.beginTransaction();
+			ss.createQuery("delete BeverageSizePrice where PRODUCT_ID=" + p.getID()).executeUpdate();
 			ss.delete(p);			
 			ss.getTransaction().commit();
 			flag = true;
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
+			ss.getTransaction().rollback();
 		} finally {
 			ss.close();
 		}
@@ -118,4 +123,52 @@ class ProductDaoImpl implements IProductDao {
 		return result;
 	}
 
+	@Override
+	public boolean newProductWithSizePrice(Product p, List<BeverageSizePrice> listSizePrice) {
+		boolean flag = false;
+		Session ss=HibernateFactory.getInstance().openSession();
+		
+		try {
+			ss.beginTransaction();
+			ss.save(p);
+			for(BeverageSizePrice bsp : listSizePrice) {
+				bsp.setProduct(p);
+				ss.save(bsp);
+			}
+			ss.getTransaction().commit();
+			flag = true;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			ss.getTransaction().rollback();
+		} finally {
+			ss.close();
+		}
+
+		return flag;
+	}
+
+	@Override
+	public boolean updateProductWithSizePrice(Product p, List<BeverageSizePrice> listSizePrice) {
+		boolean flag = false;
+		Session ss=HibernateFactory.getInstance().openSession();
+		
+		try {
+			ss.beginTransaction();
+			ss.update(p);
+			ss.createQuery("delete BeverageSizePrice where PRODUCT_ID=" + p.getID()).executeUpdate();
+			for(BeverageSizePrice bsp : listSizePrice) {
+				bsp.setProduct(p);
+				ss.save(bsp);
+			}
+			ss.getTransaction().commit();
+			flag = true;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			ss.getTransaction().rollback();
+		} finally {
+			ss.close();
+		}
+
+		return flag;
+	}
 }

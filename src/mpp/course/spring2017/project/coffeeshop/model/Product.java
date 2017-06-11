@@ -1,6 +1,8 @@
 package mpp.course.spring2017.project.coffeeshop.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,7 +32,7 @@ public class Product {
 	@Column(name="IMAGE")
 	private byte[] image;
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.DETACH)
 	@JoinColumn(name = "CATELOGY_ID")
 	private ProductCatelogy productCatelogy;
 	
@@ -39,6 +41,20 @@ public class Product {
 	
 	@Column(name="UPDATE_DATE")
 	private LocalDate updateDate;
+
+	/*private List<BeverageSizePrice> listSizePrice;
+	
+	public Product() {
+		listSizePrice = new ArrayList<BeverageSizePrice>();
+	}
+	
+	public List<BeverageSizePrice> getListSizePrice() {
+		return listSizePrice;
+	}
+
+	public void setListSizePrice(List<BeverageSizePrice> listSizePrice) {
+		this.listSizePrice = listSizePrice;
+	}*/
 
 	public int getID() {
 		return ID;
