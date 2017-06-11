@@ -8,10 +8,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mpp.course.spring2017.project.coffeeshop.controller.ViewEmployeeController">
    <children>
-      <TableView fx:id="tblViewEmployees" layoutX="14.0" layoutY="14.0" prefHeight="373.0" prefWidth="570.0">
+      <TableView fx:id="tblViewEmployees">
         <columns>
           <TableColumn prefWidth="75.0" text="C1" />
           <TableColumn prefWidth="75.0" text="C2" />

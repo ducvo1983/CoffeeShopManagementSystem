@@ -8,65 +8,71 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane alignment="center" hgap="10" prefHeight="366.0" prefWidth="419.0" styleClass="root" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mpp.course.spring2017.project.coffeeshop.controller.UpdateEmployeeController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="534.0" prefWidth="448.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mpp.course.spring2017.project.coffeeshop.controller.UpdateEmployeeController">
    <children>
-      <Label text="First Name" GridPane.rowIndex="1" />
-      <TextField fx:id="txtFirstName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <TextField fx:id="txtLastName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Label text="Date Of Birth" GridPane.rowIndex="3" />
-      <DatePicker fx:id="datePickerDOB" prefHeight="25.0" prefWidth="209.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Label text="Phone" GridPane.rowIndex="4" />
-      <TextField fx:id="txtPhone" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <TextField fx:id="txtAddress" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <Label text="Address" GridPane.rowIndex="5" />
-      <Label text="Account ID" GridPane.rowIndex="6" />
-      <TextField fx:id="txtAccountID" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-      <Label text="Password" GridPane.rowIndex="7" />
-      <PasswordField fx:id="txtPassword" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-      <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="9">
+      <GridPane alignment="center" hgap="10.0" layoutX="14.0" layoutY="74.0" prefHeight="438.0" prefWidth="415.0" styleClass="root" vgap="10.0">
          <children>
-            <Label fx:id="lblErrorMsg" text="error" textFill="RED" />
-            <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#handleUpdateAction" text="Update" />
+            <Label text="First Name" GridPane.rowIndex="1" />
+            <TextField fx:id="txtFirstName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="txtLastName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Date Of Birth" GridPane.rowIndex="3" />
+            <DatePicker fx:id="datePickerDOB" prefHeight="25.0" prefWidth="209.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Phone" GridPane.rowIndex="4" />
+            <TextField fx:id="txtPhone" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="txtAddress" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="Address" GridPane.rowIndex="5" />
+            <Label text="Account ID" GridPane.rowIndex="6" />
+            <TextField fx:id="txtAccountID" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label text="Password" GridPane.rowIndex="7" />
+            <PasswordField fx:id="txtPassword" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="9">
+               <children>
+                  <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#handleUpdateAction" text="Update" />
+               </children>
+            </HBox>
+            <Label text="Group" GridPane.rowIndex="8" />
+            <ChoiceBox fx:id="chBoxGroup" prefHeight="25.0" prefWidth="209.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Label text="Last Name" GridPane.rowIndex="2" />
+            <Label text="Select an Employee" />
+            <ChoiceBox fx:id="chBoxEmployee" prefHeight="25.0" prefWidth="209.0" GridPane.columnIndex="1" />
          </children>
-      </HBox>
-      <Label text="Group" GridPane.rowIndex="8" />
-      <ChoiceBox fx:id="chBoxGroup" prefHeight="25.0" prefWidth="209.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-      <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-      <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-      <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-      <Label text="(*)" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-      <Label text="Last Name" GridPane.rowIndex="2" />
-      <Label text="Select an Employee" />
-      <ChoiceBox fx:id="chBoxEmployee" prefHeight="25.0" prefWidth="209.0" GridPane.columnIndex="1" />
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+         <padding>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+         </padding>
+      </GridPane>
+      <Label fx:id="lblErrorMsg" disable="true" layoutX="14.0" layoutY="50.0" text="error" textFill="RED" visible="false" />
+      <Label layoutX="56.0" layoutY="14.0" text="Update Employee Information">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
    </children>
-   <columnConstraints>
-      <ColumnConstraints />
-      <ColumnConstraints />
-      <ColumnConstraints />
-      <ColumnConstraints />
-   </columnConstraints>
-   <padding>
-      <Insets bottom="10" left="25" right="25" top="25" />
-   </padding>
-   <rowConstraints>
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-      <RowConstraints />
-   </rowConstraints>
-   <stylesheets>
-      <URL value="@Login.css" />
-   </stylesheets>
-</GridPane>
+</Pane>

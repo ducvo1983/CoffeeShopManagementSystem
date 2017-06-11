@@ -15,7 +15,8 @@ public class Main extends Application {
 			Parent root = FXMLLoader.load(getClass().getResource("mpp/course/spring2017/project/coffeeshop/view/FXMLAdminForm.fxml"));
 	        
 			primaryStage.setTitle("Administrator screen");
-			primaryStage.setScene(new Scene(root, 300, 275));
+			primaryStage.setScene(new Scene(root));
+			primaryStage.setFullScreen(true);
 			primaryStage.show();
 
 			/*

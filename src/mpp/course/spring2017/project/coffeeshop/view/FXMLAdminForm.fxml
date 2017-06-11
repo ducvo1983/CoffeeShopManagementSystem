@@ -10,11 +10,11 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.text.*?>
 
-<SplitPane dividerPositions="0.29797979797979796" prefHeight="481.0" prefWidth="561.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mpp.course.spring2017.project.coffeeshop.controller.AdminController">
+<SplitPane dividerPositions="0.3253968253968254" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mpp.course.spring2017.project.coffeeshop.controller.AdminController">
    <items>
-      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="479.0" prefWidth="188.0" SplitPane.resizableWithParent="false">
+      <AnchorPane prefHeight="479.0" prefWidth="257.0" SplitPane.resizableWithParent="false">
          <children>
-            <Accordion layoutY="101.0" prefHeight="378.0" prefWidth="148.0">
+            <Accordion layoutY="153.0" prefHeight="326.0" prefWidth="202.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="153.0">
                <panes>
                   <TitledPane animated="false" prefHeight="136.0" prefWidth="202.0" text="Employee Management">
                      <content>
@@ -41,16 +41,16 @@
                   </TitledPane>
                </panes>
             </Accordion>
-            <ImageView fitHeight="99.0" fitWidth="164.0" pickOnBounds="true" smooth="false">
+            <ImageView fitHeight="152.0" fitWidth="202.0" pickOnBounds="true" smooth="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <image>
                   <Image url="@images/coffee.png" />
                </image>
             </ImageView>
          </children>
       </AnchorPane>
-      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="479.0" prefWidth="325.0">
+      <AnchorPane prefHeight="479.0" prefWidth="353.0">
          <children>
-            <BorderPane fx:id="contentPane" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <BorderPane fx:id="contentPane" layoutY="6.0" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="6.0" />
          </children></AnchorPane>
    </items>
 </SplitPane>
