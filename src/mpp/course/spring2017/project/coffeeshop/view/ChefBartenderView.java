@@ -8,30 +8,30 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import mpp.course.spring2017.project.coffeeshop.controller.CashierController;
+import mpp.course.spring2017.project.coffeeshop.controller.ChefBartenderController;
 
-public class CashierView {
+public class ChefBartenderView {
 	private FXMLLoader loader = null;
 	private Stage stage = null;
-	
+	public FXMLLoader getLoader() {
+		return loader;
+	}
+
 	public void show(String title) throws IOException {
         stage = new Stage();
-		loader = new FXMLLoader(getClass().getResource("FXMLCashierForm.fxml"));
+		loader = new FXMLLoader(getClass().getResource("FXMLChefBartenderForm.fxml"));
 		Parent root = (Parent) loader.load();
-
         stage.setTitle(title);
         stage.setScene(new Scene(root, 300, 275));
         stage.setFullScreen(true);
-        //stage.setResizable(false);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent e) {
-                ((CashierController) loader.getController()).showParent();
+            public void handle(WindowEvent we) {
+                ((ChefBartenderController) loader.getController()).showParent();
             }
         });
         stage.show();
         stage.setResizable(false);
 	}
-	
 	public void unhide() {
 		stage.show();
 	}
@@ -39,5 +39,4 @@ public class CashierView {
 	public void hide() {
 		stage.hide();
 	}
-	public FXMLLoader getLoader() { return loader; }
 }

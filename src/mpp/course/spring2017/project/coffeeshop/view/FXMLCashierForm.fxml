@@ -46,8 +46,6 @@
                   </GridPane>
                   <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
                      <children>
-                        <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#handleLogoutButtonAction" text="Logout" />
-                        <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Cancel" />
                         <Button fx:id="btnOrder" mnemonicParsing="false" onAction="#handleOrderButtonAction" text="Order" />
                         <Button fx:id="btnNew" mnemonicParsing="false" onAction="#handleNewButtonAction" text="New" />
                      </children>

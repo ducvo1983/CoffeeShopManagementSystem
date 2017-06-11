@@ -1,12 +1,12 @@
 package mpp.course.spring2017.project.coffeeshop.view;
 
-import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 
-public class CoffeeShopButton extends Button {
+public class CoffeeShopToggleButton extends ToggleButton {
 	private Object obj = null;
 	
-	public CoffeeShopButton(String buttonText, ImageView img, Object o) {
+	public CoffeeShopToggleButton(String buttonText, ImageView img, Object o) {
 		super(buttonText, img);
 		this.obj = o;
 	}
