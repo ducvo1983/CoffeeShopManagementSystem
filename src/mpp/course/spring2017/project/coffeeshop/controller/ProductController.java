@@ -1,10 +1,7 @@
 package mpp.course.spring2017.project.coffeeshop.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.LocalDate;
@@ -27,23 +24,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import mpp.course.spring2017.project.coffeeshop.dao.BeverageSizeDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.BeverageSizePriceDaoFactory;
-import mpp.course.spring2017.project.coffeeshop.dao.EmployeeDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.ProductCategoryDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.ProductDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.model.BeverageSize;
@@ -51,7 +43,6 @@ import mpp.course.spring2017.project.coffeeshop.model.BeverageSizePrice;
 import mpp.course.spring2017.project.coffeeshop.model.Product;
 import mpp.course.spring2017.project.coffeeshop.model.ProductCatelogy;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopButton;
-import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopMenuItem;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopUtils;
 
 class KeyValuePair3 {
@@ -328,26 +319,6 @@ public class ProductController implements Initializable {
 				Button btn = new CoffeeShopButton(p.getName(), new ImageView(CoffeeShopUtils.convertByteArray2JavaFXImage(p.getImage(), 100,100)), p);
 				//btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 				btn.setContentDisplay(ContentDisplay.TOP);
-				ContextMenu contextMenu = new ContextMenu();
-				if (p.getProductCatelogy().getID() == STIMULANT_DRINK ||
-			    	p.getProductCatelogy().getID() == FRUIT_DRINK) {
-	            	// Create ContextMenu
-			        List<BeverageSizePrice> bsps = BeverageSizePriceDaoFactory.getInstance().getBeverageSizePrices(p.getID());
-			        if (bsps != null) {
-			        	for (BeverageSizePrice bsp : bsps) {
-			        		MenuItem item = new CoffeeShopMenuItem(bsp.getBeverageSize().getDescription(), new Object[] { p, bsp });
-			        		item.setOnAction(new EventHandler<ActionEvent>() {
-			                    @Override
-			                    public void handle(ActionEvent event) {
-			                        CoffeeShopMenuItem item = (CoffeeShopMenuItem) event.getSource();
-			                        //CashierController.this.updateOrInsertRow(item.getProduct(), item.getBeverageSizePrice());
-			                        //calculateTotal();
-			                    }
-			                });
-			        		contextMenu.getItems().add(item);
-			        	}
-			        }
-				}
 				
 				btn.setOnMousePressed(new EventHandler<MouseEvent>() {
 				    @Override

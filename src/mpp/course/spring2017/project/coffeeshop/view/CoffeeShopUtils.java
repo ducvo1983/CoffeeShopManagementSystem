@@ -4,17 +4,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 
 import javax.imageio.ImageIO;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-
-import com.itextpdf.text.pdf.PdfDocument;
-import com.itextpdf.text.pdf.PdfPage;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Alert;
@@ -56,5 +53,21 @@ public class CoffeeShopUtils {
 	    }
 
 	    return convertedImage;
+	}
+	
+	public static String getMD5(String msg) {
+		String md5 = "";
+		try {
+			MessageDigest m = MessageDigest.getInstance("MD5");
+			m.reset();
+			m.update(msg.getBytes());
+			byte[] digest = m.digest();
+			BigInteger bigInt = new BigInteger(1, digest);
+			md5 = bigInt.toString(16);
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return md5;
 	}
 }
