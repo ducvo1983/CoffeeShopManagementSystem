@@ -12,40 +12,41 @@
 
 <SplitPane dividerPositions="0.3253968253968254" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mpp.course.spring2017.project.coffeeshop.controller.AdminController">
    <items>
-      <AnchorPane prefHeight="479.0" prefWidth="257.0" SplitPane.resizableWithParent="false">
+      <AnchorPane fx:id="anchorPaneLeft" prefHeight="479.0" prefWidth="257.0" SplitPane.resizableWithParent="false">
          <children>
-            <Accordion layoutY="153.0" prefHeight="326.0" prefWidth="202.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="153.0">
-               <panes>
-                  <TitledPane animated="false" prefHeight="136.0" prefWidth="202.0" text="Employee Management">
-                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <Button id="btnNewEmployee" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#newEmployee" prefHeight="25.0" prefWidth="112.0" text="New Employee" />
-                              <Button fx:id="btnViewEmployee" layoutX="14.0" layoutY="56.0" mnemonicParsing="false" onAction="#viewEmployees" prefHeight="25.0" prefWidth="112.0" text="View Employee" />
-                              <Button fx:id="btnUpdateEmployee" layoutX="14.0" layoutY="99.0" mnemonicParsing="false" onAction="#updateEmployee" prefHeight="25.0" prefWidth="113.0" text="Update Employee" />
-                           </children></AnchorPane>
-                     </content>
-                  </TitledPane>
-                  <TitledPane animated="false" prefHeight="158.0" prefWidth="202.0" text="Product Management">
-                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <Button fx:id="btnListProduct" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#listProducts" prefHeight="25.0" prefWidth="112.0" text="List Product" />
-                           </children></AnchorPane>
-                     </content>
-                  </TitledPane>
-                  <TitledPane animated="false" text="untitled 3">
-                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                     </content>
-                  </TitledPane>
-               </panes>
-            </Accordion>
-            <ImageView fitHeight="152.0" fitWidth="202.0" pickOnBounds="true" smooth="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <image>
-                  <Image url="@images/coffee.png" />
-               </image>
-            </ImageView>
+            <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <ImageView fitHeight="152.0" fitWidth="202.0" pickOnBounds="true" smooth="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <image>
+                        <Image url="@../../../../../../../images/admin_logo.png" />
+                     </image>
+                  </ImageView>
+                  <Accordion layoutY="153.0" prefHeight="327.0" prefWidth="202.0" AnchorPane.bottomAnchor="0.0">
+                     <panes>
+                        <TitledPane animated="false" layoutY="153.0" text="Employee Management">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <Button id="btnNewEmployee" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#newEmployee" prefHeight="25.0" prefWidth="112.0" text="New Employee" />
+                                    <Button fx:id="btnViewEmployee" layoutX="14.0" layoutY="56.0" mnemonicParsing="false" onAction="#viewEmployees" prefHeight="25.0" prefWidth="112.0" text="View Employee" />
+                                    <Button fx:id="btnUpdateEmployee" layoutX="14.0" layoutY="99.0" mnemonicParsing="false" onAction="#updateEmployee" prefHeight="25.0" prefWidth="113.0" text="Update Employee" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </TitledPane>
+                        <TitledPane animated="false" layoutY="173.0" text="Product Management">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <Button fx:id="btnListProduct" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#listProducts" prefHeight="25.0" prefWidth="112.0" text="List Product" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </TitledPane>
+                     </panes>
+                  </Accordion>
+               </children>
+            </VBox>
          </children>
       </AnchorPane>
       <AnchorPane prefHeight="479.0" prefWidth="353.0">

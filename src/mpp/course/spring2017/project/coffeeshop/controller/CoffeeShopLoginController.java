@@ -44,6 +44,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import mpp.course.spring2017.project.coffeeshop.dao.AccountDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.model.Account;
+import mpp.course.spring2017.project.coffeeshop.view.AdminView;
 import mpp.course.spring2017.project.coffeeshop.view.CashierView;
 import mpp.course.spring2017.project.coffeeshop.view.ChefBartenderView;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopLoginView;
@@ -60,6 +61,7 @@ public class CoffeeShopLoginController {
     private final int BARTENDER_ROLE = 4;
     private CashierView cashierView = null;
     private ChefBartenderView chefBartenderView = null;
+    private AdminView adminView = null;
     private CoffeeShopLoginView coffeeShopLoginView = null;
     
     private boolean validateFields() {
@@ -84,7 +86,17 @@ public class CoffeeShopLoginController {
     	try {
 	    	switch (acct.getRole().getID()) {
 	    	case ADMIN_ROLE:
-	    		break;
+	    	{
+	    		if (adminView == null) {
+	    			adminView = new AdminView();
+	    		}
+	    		adminView.show("Welcome " + acct.getUserName());
+	    		FXMLLoader loader = adminView.getLoader();
+	    		AdminController controller = (AdminController) loader.getController();
+	    		controller.setLoginView(coffeeShopLoginView);
+	    		controller.setLoginAccount(acct);
+	    	}
+	    		return true;
 	    	case CASHIER_ROLE:
 	    	{
 	    		if (cashierView == null) {
@@ -122,22 +134,29 @@ public class CoffeeShopLoginController {
     		Account acct = AccountDaoFactory.getInstance().findAccount(txtUserName.getText());
     		String passwordHashText = "";
 			try {
-				MessageDigest m = MessageDigest.getInstance("MD5");
-				m.reset();
-				m.update(txtPassword.getText().trim().getBytes());
-				byte[] digest = m.digest();
-				BigInteger bigInt = new BigInteger(1, digest);
-				passwordHashText = bigInt.toString(16);
-			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
-			}
-    		if (acct.getPassword().equals(passwordHashText)) {
-    			if (showForm(acct)) {
-    				coffeeShopLoginView.hide();
-    			} else {
-    				txtErrorMessage.setText("Invalid username and password");
+				if (acct != null) {
+					MessageDigest m = MessageDigest.getInstance("MD5");
+					m.reset();
+					m.update(txtPassword.getText().trim().getBytes());
+					byte[] digest = m.digest();
+					BigInteger bigInt = new BigInteger(1, digest);
+					passwordHashText = bigInt.toString(16);
+					if (acct.getPassword().equals(passwordHashText)) {
+		    			if (showForm(acct)) {
+		    				txtErrorMessage.setText("");
+		    				coffeeShopLoginView.hide();
+		    			} else {
+		    				txtErrorMessage.setText("Invalid user login");
+		    			}
+		    		} else {
+	    				txtErrorMessage.setText("Invalid user login");
+	    			}
+				} else {
+    				txtErrorMessage.setText("Invalid user login");
     			}
-    		}
+			} catch (Exception ex) {
+				ex.getMessage();
+			}
     		handleResetButtonAction(event);
     	}
     }

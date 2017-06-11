@@ -34,6 +34,9 @@
 	<classpathentry kind="lib" path="lib/pdfbox-tools-2.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/preflight-2.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/xmpbox-2.0.6.jar"/>
+	<classpathentry kind="lib" path="lib/jms.jar"/>
+	<classpathentry kind="lib" path="lib/activemq-all-5.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/javax.jms.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>

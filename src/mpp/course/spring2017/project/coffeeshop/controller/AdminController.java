@@ -3,13 +3,20 @@ package mpp.course.spring2017.project.coffeeshop.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import mpp.course.spring2017.project.coffeeshop.model.Account;
+import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopLoginView;
 
 public class AdminController {	
 	@FXML BorderPane contentPane;
-
+	@FXML AnchorPane anchorPaneLeft;
+	private CoffeeShopLoginView coffeeShopLoginView = null;
+	private Account loginAccount = null;
+	
 	@FXML protected void newEmployee(ActionEvent event) {
 		try {  
 			Pane newLoadedPane = FXMLLoader.load(AdminController.class.getResource("../view/FXMLNewEmployee.fxml")); //FXMLLoader.load(getClass().getResource("../view/FXMLNewEmployee.fxml"));
@@ -48,5 +55,28 @@ public class AdminController {
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
+	}
+
+	@FXML private void initialize() {
+		anchorPaneLeft.setMaxWidth(202);
+		anchorPaneLeft.setMinWidth(202);
+	}
+
+	public void setLoginView(CoffeeShopLoginView coffeeShopLoginView) {
+		this.coffeeShopLoginView = coffeeShopLoginView;
+	}
+	
+	public void showParent() {
+		if (coffeeShopLoginView != null) {
+			coffeeShopLoginView.unhide();
+		}
+	}
+
+	public Account getLoginAccount() {
+		return loginAccount;
+	}
+
+	public void setLoginAccount(Account loginAccount) {
+		this.loginAccount = loginAccount;
 	}
 }

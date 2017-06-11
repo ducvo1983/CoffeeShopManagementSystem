@@ -25,7 +25,7 @@ public class AdminView {
         //stage.setResizable(false);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e) {
-                //((AdminController) loader.getController()).showParent();
+                ((AdminController) loader.getController()).showParent();
             }
         });
         stage.show();

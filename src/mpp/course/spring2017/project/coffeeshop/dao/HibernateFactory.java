@@ -30,6 +30,9 @@ public class HibernateFactory {
 		return sf.openSession();
 	}
 	
+	public void closeSession() {
+		sf.close();
+	}
 	public static boolean newEmployee(Employee e) {
 		try {			
 			Session ss=sf.openSession();
