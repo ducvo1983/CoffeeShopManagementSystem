@@ -47,6 +47,7 @@ import mpp.course.spring2017.project.coffeeshop.model.Product;
 import mpp.course.spring2017.project.coffeeshop.model.ProductCatelogy;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopButton;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopMenuItem;
+import mpp.course.spring2017.project.coffeeshop.view.ShopCoffeeUtils;
 
 public class ProductController implements Initializable {
 	private final int COLS = 5;
@@ -174,7 +175,7 @@ public class ProductController implements Initializable {
 		chBoxCategory.getSelectionModel().select(index);
     	createdDatePicker.setValue(p.getCreateDate());
     	updatedDatePicker.setValue(p.getUpdateDate());
-    	imageProduct.setImage(convertByteArray2JavaFXImage(p.getImage(), 100, 100));
+    	imageProduct.setImage(ShopCoffeeUtils.convertByteArray2JavaFXImage(p.getImage(), 100, 100));
     	
     	List<BeverageSizePrice> listSizePrice = BeverageSizePriceDaoFactory.getInstance().getBeverageSizePrices(p.getID());
     	if(listSizePrice != null) {
@@ -188,18 +189,6 @@ public class ProductController implements Initializable {
     		}
     	}
 	}
-	
-	private static Image convertByteArray2JavaFXImage(byte[] raw, final int width, final int height) {
-        WritableImage image = new WritableImage(width, height);
-        try {
-            ByteArrayInputStream bis = new ByteArrayInputStream(raw);
-            BufferedImage read = ImageIO.read(bis);
-            image = SwingFXUtils.toFXImage(read, null);
-        } catch (IOException ex) {
-            //Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return image;
-    }
 	
 	private void load2GridPane(int categoryID, GridPane target) {
 		List<Product> products = null; // = ProductDaoFactory.getInstance().getProducts(categoryID);
@@ -225,7 +214,7 @@ public class ProductController implements Initializable {
 			for (int j = 0; j < COLS; j++) {
 				if (pos >= products.size()) break;
 				Product p = products.get(pos++);
-				Button btn = new CoffeeShopButton(p.getName(), new ImageView(convertByteArray2JavaFXImage(p.getImage(), 100,100)), p);
+				Button btn = new CoffeeShopButton(p.getName(), new ImageView(ShopCoffeeUtils.convertByteArray2JavaFXImage(p.getImage(), 100,100)), p);
 				//btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 				btn.setContentDisplay(ContentDisplay.TOP);
 				ContextMenu contextMenu = new ContextMenu();
@@ -235,7 +224,7 @@ public class ProductController implements Initializable {
 			        List<BeverageSizePrice> bsps = BeverageSizePriceDaoFactory.getInstance().getBeverageSizePrices(p.getID());
 			        if (bsps != null) {
 			        	for (BeverageSizePrice bsp : bsps) {
-			        		MenuItem item = new CoffeeShopMenuItem(bsp.getBeverageSize().getDescription(), p, bsp);
+			        		MenuItem item = new CoffeeShopMenuItem(bsp.getBeverageSize().getDescription(), new Object[] { p, bsp });
 			        		item.setOnAction(new EventHandler<ActionEvent>() {
 			                    @Override
 			                    public void handle(ActionEvent event) {
@@ -254,7 +243,7 @@ public class ProductController implements Initializable {
 				    public void handle(MouseEvent event) {
 				        if (event.isPrimaryButtonDown()) {
 				        	CoffeeShopButton cfBtn = ((CoffeeShopButton) event.getSource());
-				        	Product selectedProd = cfBtn.getProduct();
+				        	Product selectedProd = (Product) cfBtn.getObject();
 				        	if(selectedProd != null) displayProductInfo(selectedProd);
 				        }
 				    }
@@ -270,7 +259,7 @@ public class ProductController implements Initializable {
 			imageChooser.setTitle("Open Resource File");
 			File file = imageChooser.showOpenDialog(rootSplitPane.getScene().getWindow());
 			if(file != null) {
-				imageProduct.setImage(convertByteArray2JavaFXImage(Files.readAllBytes(file.toPath()), 100, 100));
+				imageProduct.setImage(ShopCoffeeUtils.convertByteArray2JavaFXImage(Files.readAllBytes(file.toPath()), 100, 100));
 			}
 			
 		} catch (Exception ex) {
