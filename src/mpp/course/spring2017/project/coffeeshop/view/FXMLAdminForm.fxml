@@ -27,9 +27,13 @@
                            <content>
                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <Button id="btnNewEmployee" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#newEmployee" prefHeight="25.0" prefWidth="112.0" text="New Employee" />
-                                    <Button fx:id="btnViewEmployee" layoutX="14.0" layoutY="56.0" mnemonicParsing="false" onAction="#viewEmployees" prefHeight="25.0" prefWidth="112.0" text="View Employee" />
-                                    <Button fx:id="btnUpdateEmployee" layoutX="14.0" layoutY="99.0" mnemonicParsing="false" onAction="#updateEmployee" prefHeight="25.0" prefWidth="113.0" text="Update Employee" />
+                                    <VBox layoutX="14.0" layoutY="14.0">
+                                       <children>
+                                          <Button id="btnNewEmployee" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#newEmployee" prefHeight="27.0" prefWidth="136.0" text="New Employee" />
+                                          <Button fx:id="btnViewEmployee" layoutX="14.0" layoutY="56.0" mnemonicParsing="false" onAction="#viewEmployees" prefHeight="27.0" prefWidth="136.0" text="View Employee" />
+                                          <Button fx:id="btnUpdateEmployee" layoutX="14.0" layoutY="99.0" mnemonicParsing="false" onAction="#updateEmployee" prefHeight="27.0" prefWidth="137.0" text="Update Employee" />
+                                       </children>
+                                    </VBox>
                                  </children>
                               </AnchorPane>
                            </content>

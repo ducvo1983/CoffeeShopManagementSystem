@@ -8,6 +8,7 @@ public interface IOrderLineDao {
 	public boolean newOrderLine(OrderLine o);
 	public List<OrderLine> getAllOrderLines();
 	public List<OrderLine> getOrderLines(String orderNo);
+	public List<OrderLine> getOrderLines(int productID);
 	public boolean updateOrderLine(OrderLine o);
 	public boolean deleteOrderLine(OrderLine o);
 	public OrderLine findOrderLine(String orderNo, int productID);

@@ -36,10 +36,12 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import mpp.course.spring2017.project.coffeeshop.dao.BeverageSizeDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.BeverageSizePriceDaoFactory;
+import mpp.course.spring2017.project.coffeeshop.dao.OrderLineDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.ProductCategoryDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.ProductDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.model.BeverageSize;
 import mpp.course.spring2017.project.coffeeshop.model.BeverageSizePrice;
+import mpp.course.spring2017.project.coffeeshop.model.OrderLine;
 import mpp.course.spring2017.project.coffeeshop.model.Product;
 import mpp.course.spring2017.project.coffeeshop.model.ProductCatelogy;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopButton;
@@ -94,7 +96,7 @@ public class ProductController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 		imageChooser = new FileChooser();
 		imageChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png")
+            new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.jpeg")
             //new FileChooser.ExtensionFilter("PNG", "*.png")
         );
 		imageChooser.setTitle("Select Product's Image");
@@ -364,6 +366,18 @@ public class ProductController implements Initializable {
 			alert = new Alert(AlertType.CONFIRMATION, "Are you sure to delete this product?", ButtonType.YES, ButtonType.NO);
         	alert.showAndWait();
         	if (alert.getResult() == ButtonType.YES) {
+        		// Find whether if this product is already ordered
+        		List<OrderLine> odlList = OrderLineDaoFactory.getInstance().getOrderLines(selectedProd.getID());
+        		if (odlList != null) {
+        			alert = new Alert(AlertType.CONFIRMATION, "This product is already ordered. Do you want to delete all its related orders", ButtonType.YES, ButtonType.NO);
+                	alert.showAndWait();
+                	if (alert.getResult() == ButtonType.NO) {
+                		return;
+                	}
+                	for (OrderLine odl : odlList) {
+                		OrderLineDaoFactory.getInstance().deleteOrderLine(odl);
+                	}
+        		}
         	    if(ProductDaoFactory.getInstance().deleteProduct(selectedProd)) {
         	    	load2GridPane(selectedProd.getProductCatelogy().getID());
         	    	selectedProd = null;
@@ -419,7 +433,7 @@ public class ProductController implements Initializable {
 					if(ProductDaoFactory.getInstance().newProduct(selectedProd)) {
 						alert = new Alert(AlertType.INFORMATION, "Create the new product successfully!", ButtonType.OK);
 			        	alert.showAndWait();
-			        	resetForm();
+			        	resetProduct(event);
 					}
 				}
 			}
@@ -456,7 +470,7 @@ public class ProductController implements Initializable {
 					if(ProductDaoFactory.getInstance().newProductWithSizePrice(selectedProd, listBSP)) {
 						alert = new Alert(AlertType.INFORMATION, "Create the new product successfully!", ButtonType.OK);
 			        	alert.showAndWait();
-			        	resetForm();
+			        	resetProduct(event);
 					}
 				}
 			}

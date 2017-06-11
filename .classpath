@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="mpp/course/spring2017/project/coffeeshop/view/images/" kind="src" path="src"/>
-	<classpathentry kind="src" path="src/mpp/course/spring2017/project/coffeeshop/view/images"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.7.jar"/>
 	<classpathentry kind="lib" path="lib/classmate-1.3.0.jar"/>
 	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
