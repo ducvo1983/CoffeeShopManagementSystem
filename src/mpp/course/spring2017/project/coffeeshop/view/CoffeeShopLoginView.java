@@ -2,14 +2,16 @@ package mpp.course.spring2017.project.coffeeshop.view;
 
 import java.io.IOException;
 
-import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import mpp.course.spring2017.project.coffeeshop.controller.CoffeeShopLoginController;
+import mpp.course.spring2017.project.coffeeshop.dao.HibernateFactory;
 
-public class CoffeeShopLoginView extends Application {
+public class CoffeeShopLoginView {
 	private FXMLLoader loader = null;
 	private Stage stage = null;
 		
@@ -21,6 +23,11 @@ public class CoffeeShopLoginView extends Application {
         stage.setTitle("CoffeeShop Welcome");
         stage.setScene(new Scene(root, 300, 275));
         stage.setFullScreen(false);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent e) {
+            	HibernateFactory.getInstance().closeSession();
+            }
+        });
         ((CoffeeShopLoginController) loader.getController()).setLoginView(this);
         stage.show();
         stage.setResizable(false);
@@ -39,15 +46,5 @@ public class CoffeeShopLoginView extends Application {
 	
 	public void hide() {
 		stage.hide();
-	}
-	
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
-		load(primaryStage);
-	}
-	
-	public static void main(String[] args) {
-		launch(args);
 	}
 }
