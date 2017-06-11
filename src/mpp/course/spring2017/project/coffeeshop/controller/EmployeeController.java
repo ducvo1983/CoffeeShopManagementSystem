@@ -1,8 +1,6 @@
 package mpp.course.spring2017.project.coffeeshop.controller;
 
-import java.math.BigInteger;
 import java.net.URL;
-import java.security.MessageDigest;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -12,18 +10,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import mpp.course.spring2017.project.coffeeshop.dao.EmployeeDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.RoleDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.model.Account;
 import mpp.course.spring2017.project.coffeeshop.model.Employee;
 import mpp.course.spring2017.project.coffeeshop.model.Role;
+import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopUtils;
 
 class KeyValuePair {
 	private final int key;
@@ -157,20 +156,9 @@ public class EmployeeController implements Initializable {
 			r.setID(chBoxGroup.getValue().getKey());
 			r.setRoleName(chBoxGroup.getValue().toString());
 			
-			String hashtext = "";
-			try {
-				MessageDigest m = MessageDigest.getInstance("MD5");
-				m.reset();
-				m.update(txtPassword.getText().trim().getBytes());
-				byte[] digest = m.digest();
-				BigInteger bigInt = new BigInteger(1, digest);
-				hashtext = bigInt.toString(16);
-			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
-			}
 			Account acc = new Account();
 			acc.setUserName(txtAccountID.getText().trim());
-			acc.setPassword(hashtext);
+			acc.setPassword(CoffeeShopUtils.getMD5(txtPassword.getText().trim()));
 			acc.setRole(r);
 				
 			emp.setAccount(acc);
