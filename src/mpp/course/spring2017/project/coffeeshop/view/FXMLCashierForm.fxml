@@ -35,19 +35,18 @@
                         <Label text="Customer" />
                         <Label text="Token" GridPane.rowIndex="2" />
                         <TextField fx:id="txtCustomer" GridPane.columnIndex="1" />
-                        <ComboBox fx:id="cboToken" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <ComboBox fx:id="cboOrderType" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="Tax" GridPane.rowIndex="3" />
                         <Label fx:id="lblTax" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="Total" GridPane.rowIndex="4" />
                         <Label fx:id="lblTotal" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label text="Getting way" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="cboGettingWay" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Order type" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cboToken" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                   <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
                      <children>
-                        <Button fx:id="btnLogout" mnemonicParsing="false" onAction="#handleLogoutButtonAction" text="Logout" />
-                        <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Cancel" />
+                        <Button fx:id="btnPrint" mnemonicParsing="false" onAction="#print" text="Print" />
                         <Button fx:id="btnOrder" mnemonicParsing="false" onAction="#handleOrderButtonAction" text="Order" />
                         <Button fx:id="btnNew" mnemonicParsing="false" onAction="#handleNewButtonAction" text="New" />
                      </children>

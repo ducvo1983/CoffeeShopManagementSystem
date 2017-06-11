@@ -102,4 +102,22 @@ class CustomerOrderDaoImpl implements ICustomerOrderDao {
 
 		return flag;
 	}
+
+	@Override
+	public List<CustomerOrder> getActiveCustomerOrders() {
+		List<CustomerOrder> result = null;
+		Session ss=HibernateFactory.getInstance().openSession();
+		
+		try {
+			ss.beginTransaction();
+			result = ss.createQuery("from CustomerOrder where STATUS = 'New' OR STATUS = 'Processing' OR STATUS = 'Token is alarm'", CustomerOrder.class).getResultList();
+			ss.getTransaction().commit();
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		} finally {
+			ss.close();
+		}
+		
+		return result;
+	}
 }

@@ -25,4 +25,7 @@ public class CustomerOrderDaoFactory {
 	public CustomerOrder findCustomerOrder(String orderNo) {
 		return impl.findCustomerOrder(orderNo);
 	}
+	public List<CustomerOrder> getActiveCustomerOrders() {
+		return impl.getActiveCustomerOrders();
+	}
 }

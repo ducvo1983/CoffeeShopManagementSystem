@@ -1,15 +1,12 @@
 package mpp.course.spring2017.project.coffeeshop.controller;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
+
 
 import com.sun.prism.impl.Disposer.Record;
 
@@ -20,19 +17,16 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -40,12 +34,10 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -54,21 +46,22 @@ import javafx.scene.layout.RowConstraints;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
-import javax.imageio.ImageIO;
-
-import mpp.course.spring2017.project.coffeeshop.dao.AccountDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.BeverageSizePriceDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.CustomerOrderDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.ProductDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.TokenDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.model.Account;
 import mpp.course.spring2017.project.coffeeshop.model.BeverageSizePrice;
+import mpp.course.spring2017.project.coffeeshop.model.CashierModel;
 import mpp.course.spring2017.project.coffeeshop.model.CustomerOrder;
 import mpp.course.spring2017.project.coffeeshop.model.OrderLine;
 import mpp.course.spring2017.project.coffeeshop.model.Product;
 import mpp.course.spring2017.project.coffeeshop.model.Token;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopButton;
+import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopLoginView;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopMenuItem;
+import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopUtils;
+import mpp.course.spring2017.project.coffeeshop.view.PDFView;
 
 public class CashierController {
 	@FXML private TableView<OrderTableItem> tblOrderLine;
@@ -88,29 +81,31 @@ public class CashierController {
 	@FXML private AnchorPane firstAnchorPane;
 	@FXML private TextField txtCustomer;
 	@FXML private ComboBox<Token> cboToken;
-	@FXML private ComboBox<String> cboGettingWay;
+	@FXML private ComboBox<String> cboOrderType;
 	@FXML private Label lblTax;
 	@FXML private Label lblTotal;
+	@FXML private Button btnNew;
+	@FXML private Button btnOrder;
+	@FXML private Button btnPrint;
 	
-	private final String IMAGE_DEL = "file:/Users/nhanvo/Documents/workspace/CoffeeShopMS/src/mpp/course/spring2017/project/coffeeshop/view/delete.jpeg";
+	private final String IMAGE_DEL = "file:images/delete.png";
 	private final int COLS = 5;
 	private final int FOOD = 1;
 	private final int STIMULANT_DRINK = 2;
 	private final int FRUIT_DRINK = 3;
 	private final int SOFT_DRINK = 4;
 	private Account loginAccount = null;
+	private CashierModel model = new CashierModel();
 	
-	private static Image convertByteArray2JavaFXImage(byte[] raw, final int width, final int height) {
-        WritableImage image = new WritableImage(width, height);
-        try {
-            ByteArrayInputStream bis = new ByteArrayInputStream(raw);
-            BufferedImage read = ImageIO.read(bis);
-            image = SwingFXUtils.toFXImage(read, null);
-        } catch (IOException ex) {
-            //Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return image;
-    }
+	public Account getLoginAccount() {
+		return loginAccount;
+	}
+
+	public void setLoginAccount(Account loginAccount) {
+		this.loginAccount = loginAccount;
+	}
+
+	private CoffeeShopLoginView coffeeShopLoginView = null;
 	
 	void calculateTotal() {
 		double total = 0;
@@ -126,6 +121,9 @@ public class CashierController {
 			target.getColumnConstraints().clear();
 		if (target.getRowConstraints() != null)
 			target.getRowConstraints().clear();
+		if (target.getChildren() != null) {
+			target.getChildren().clear();
+		}
 		// Add row and column
 		List<Product> products = ProductDaoFactory.getInstance().getProducts(categoryID);
  		int ROWS = products.size() / COLS;
@@ -145,7 +143,7 @@ public class CashierController {
 			for (int j = 0; j < COLS; j++) {
 				if (pos >= products.size()) break;
 				Product p = products.get(pos++);
-				Button btn = new CoffeeShopButton(p.getName(), new ImageView(convertByteArray2JavaFXImage(p.getImage(), 100,100)), p);
+				Button btn = new CoffeeShopButton(p.getName(), new ImageView(CoffeeShopUtils.convertByteArray2JavaFXImage(p.getImage(), 100,100)), p);
 				btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 				btn.setContentDisplay(ContentDisplay.TOP);
 				ContextMenu contextMenu = new ContextMenu();
@@ -155,12 +153,12 @@ public class CashierController {
 			        List<BeverageSizePrice> bsps = BeverageSizePriceDaoFactory.getInstance().getBeverageSizePrices(p.getID());
 			        if (bsps != null) {
 			        	for (BeverageSizePrice bsp : bsps) {
-			        		MenuItem item = new CoffeeShopMenuItem(bsp.getBeverageSize().getDescription(), p, bsp);
+			        		MenuItem item = new CoffeeShopMenuItem(bsp.getBeverageSize().getDescription(), new Object[] {p, bsp});
 			        		item.setOnAction(new EventHandler<ActionEvent>() {
 			                    @Override
 			                    public void handle(ActionEvent event) {
 			                        CoffeeShopMenuItem item = (CoffeeShopMenuItem) event.getSource();
-			                        CashierController.this.updateOrInsertRow(item.getProduct(), item.getBeverageSizePrice());
+			                        CashierController.this.updateOrInsertRow((Product) item.getObject(0), (BeverageSizePrice) item.getObject(1));
 			                        calculateTotal();
 			                    }
 			                });
@@ -174,7 +172,7 @@ public class CashierController {
 				    public void handle(MouseEvent event) {
 				        if (event.isPrimaryButtonDown()) {
 				        	CoffeeShopButton cfBtn = ((CoffeeShopButton) event.getSource());
-				        	Product selectedProd = cfBtn.getProduct();
+				        	Product selectedProd = (Product) cfBtn.getObject();
 				            if (selectedProd.getProductCatelogy().getID() == STIMULANT_DRINK ||
 				            	selectedProd.getProductCatelogy().getID() == FRUIT_DRINK) {
 				        		contextMenu.show(cfBtn, event.getScreenX(), event.getScreenY());
@@ -260,8 +258,10 @@ public class CashierController {
 							((OrderTableItem) t.getTableView().getItems().get(
 			                        t.getTablePosition().getRow())
 			                        ).getQuantity().set(t.getNewValue());
+							calculateTotal();
 						} catch (NumberFormatException e) {
-							showErrorMessgge(e.getMessage());
+							CoffeeShopUtils.showErrorMessgge(e.getMessage());
+							//((TextFieldTableCell) t.getSource()).setText(t.getOldValue());
 						}
 					}
 	        });
@@ -291,7 +291,7 @@ public class CashierController {
 		ways.addAll(new String[] { "At Coffee Shop",
 				"Take away"
 		});
-		cboGettingWay.setItems(ways);
+		cboOrderType.setItems(ways);
 		List<Token> tokens = TokenDaoFactory.getInstance().getAllTokens();
 		cboToken.setItems(FXCollections.observableArrayList(tokens));
 		cboToken.setConverter(new StringConverter<Token>() {
@@ -309,8 +309,13 @@ public class CashierController {
 			}
 			
 		});
-		loginAccount = AccountDaoFactory.getInstance().findAccount("tri");
+		//loginAccount = AccountDaoFactory.getInstance().findAccount("tri");
 		lblTax.setText("7%");
+		model.setCurrentOrder(null);
+		model.setNewOrder(true);
+		btnOrder.setDisable(false);
+		btnPrint.setDisable(true);
+
 	}
 	
 	@FXML
@@ -382,10 +387,15 @@ public class CashierController {
 	
 	@FXML
 	public void handleSelectionChanged(Event t) {
-		load2GridPane(STIMULANT_DRINK, gridStimulantDrink);
-        load2GridPane(FRUIT_DRINK, gridFruitDrink);
-        load2GridPane(SOFT_DRINK, gridSoftDrink);
-        load2GridPane(FOOD, gridFood);
+		if (tabStimulantDrink.isSelected()) {
+			load2GridPane(STIMULANT_DRINK, gridStimulantDrink);
+		} else if (tabFruitDrink.isSelected()) {
+			load2GridPane(FRUIT_DRINK, gridFruitDrink);
+		} else if (tabSoftDrink.isSelected()) {
+			load2GridPane(SOFT_DRINK, gridSoftDrink);
+		} else if (tabFood.isSelected()) {
+			load2GridPane(FOOD, gridFood);
+		}
     }
 	
 	void clearOrder() {
@@ -393,28 +403,26 @@ public class CashierController {
 		tblOrderLine.refresh();
 		txtCustomer.setText("");
 		cboToken.getSelectionModel().selectFirst();
-		cboGettingWay.getSelectionModel().selectFirst();
+		cboOrderType.getSelectionModel().selectFirst();
 		//lblTax.setText("0.0");
 		lblTotal.setText("0.0");
 	}
-	void showErrorMessgge(String msg) {
-		new Alert(Alert.AlertType.ERROR, msg).showAndWait();
-	}
+	
 	boolean validateFields() {
 		if (txtCustomer.getText().trim().equals("")) {
-			showErrorMessgge("Customer name is required");
+			CoffeeShopUtils.showErrorMessgge("Customer name is required");
 			return false;
 		}
-		if (cboGettingWay.getValue().equals("")) {
-			showErrorMessgge("Order type is required");
+		if (cboOrderType.getValue() == null || cboOrderType.getValue().equals("")) {
+			CoffeeShopUtils.showErrorMessgge("Order type is required");
 			return false;
 		}
-		if (cboToken.getValue().equals("")) {
-			showErrorMessgge("Token is required");
+		if (cboToken.getValue() == null || cboToken.getValue().equals("")) {
+			CoffeeShopUtils.showErrorMessgge("Token is required");
 			return false;
 		}
 		if (tblOrderLine.getItems().size() == 0) {
-			showErrorMessgge("Please select the product first");
+			CoffeeShopUtils.showErrorMessgge("Please select the product first");
 			return false;
 		}
 		return true;
@@ -431,7 +439,7 @@ public class CashierController {
 		o.setListOrderLine(getOrderLines());
 		o.setOrderDate(LocalDate.now());
 		o.setOrderNo(generateOrderNo());
-		o.setOrderType(cboGettingWay.getSelectionModel().getSelectedItem());
+		o.setOrderType(cboOrderType.getSelectionModel().getSelectedItem());
 		o.setStatus("New");
 		o.setTax(0.07f);
 		o.setToken(cboToken.getValue());
@@ -448,19 +456,40 @@ public class CashierController {
 	}
 	@FXML protected void handleNewButtonAction(ActionEvent event) {
 		clearOrder();
+		model.setCurrentOrder(null);
+		model.setNewOrder(true);
+		btnOrder.setDisable(false);
+		btnPrint.setDisable(true);
     }
 	
 	@FXML protected void handleOrderButtonAction(ActionEvent event) {
 		if (validateFields()) {
-			CustomerOrderDaoFactory.getInstance().newCustomerOrder(buildNewCustomerOrder());
+			CustomerOrder co = buildNewCustomerOrder();
+			CustomerOrderDaoFactory.getInstance().newCustomerOrder(co);
+			model.setCurrentOrder(co);
+			model.setNewOrder(false);
+			btnOrder.setDisable(true);
+			btnPrint.setDisable(false);
+		}
+	}
+
+	public void setLoginView(CoffeeShopLoginView coffeeShopLoginView) {
+		this.coffeeShopLoginView = coffeeShopLoginView;
+	}
+	
+	public void showParent() {
+		if (coffeeShopLoginView != null) {
+			coffeeShopLoginView.unhide();
 		}
 	}
 	
-	@FXML protected void handleCancelButtonAction(ActionEvent event) {
-		clearOrder();
-    }
-	
-	@FXML protected void handleLogoutButtonAction(ActionEvent event) {
-		
-    }
+	@FXML private void print(ActionEvent event) {
+		try {
+            PDFView pdfV = new PDFView();
+            pdfV.show("PDF");
+            ((PDFReportController)pdfV.getLoader().getController()).showPDF(model.getCurrentOrder());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

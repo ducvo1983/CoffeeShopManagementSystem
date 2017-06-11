@@ -1,22 +1,21 @@
 package mpp.course.spring2017.project.coffeeshop.view;
 
 import javafx.scene.control.MenuItem;
-import mpp.course.spring2017.project.coffeeshop.model.BeverageSizePrice;
-import mpp.course.spring2017.project.coffeeshop.model.Product;
 
 public class CoffeeShopMenuItem extends MenuItem {
-	private Product prod = null;
-	private BeverageSizePrice bsp = null;
+	private Object[] objs = null;
 
-	public CoffeeShopMenuItem(String menuName, Product prod, BeverageSizePrice bsp) {
+	public CoffeeShopMenuItem(String menuName, Object[] objs) {
 		super(menuName);
-		this.prod = prod;
-		this.bsp = bsp;
+		this.objs = objs;
 	}
-	public BeverageSizePrice getBeverageSizePrice() {
-		return bsp;
+	public Object getObject(int index) {
+		if (objs == null || index < 0 || index > objs.length) {
+			return null;
+		}
+		return objs[index];
 	}
-	public Product getProduct() {
-		return prod;
+	public Object[] getObjects() {
+		return objs;
 	}
 }

@@ -2,17 +2,16 @@ package mpp.course.spring2017.project.coffeeshop.view;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
-import mpp.course.spring2017.project.coffeeshop.model.Product;
 
 public class CoffeeShopButton extends Button {
-	private Product p = null;
+	private Object obj = null;
 	
-	public CoffeeShopButton(String buttonText, ImageView img, Product p) {
+	public CoffeeShopButton(String buttonText, ImageView img, Object o) {
 		super(buttonText, img);
-		this.p = p;
+		this.obj = o;
 	}
 
-	public Product getProduct() {
-		return p;
+	public Object getObject() {
+		return obj;
 	}	
 }
