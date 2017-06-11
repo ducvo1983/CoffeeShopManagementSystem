@@ -325,7 +325,7 @@ public class ProductController implements Initializable {
 				    public void handle(MouseEvent event) {
 				        if (event.isPrimaryButtonDown()) {
 				        	CoffeeShopButton cfBtn = ((CoffeeShopButton) event.getSource());
-				        	Product selectedProd = (Product) cfBtn.getObject();
+				        	selectedProd = (Product) cfBtn.getObject();
 				        	if(selectedProd != null) displayProductInfo(selectedProd);
 				        }
 				    }
