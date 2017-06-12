@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jms.JMSException;
 
 import com.sun.prism.impl.Disposer.Record;
 
@@ -45,7 +46,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-
+import mpp.course.spring2017.project.coffeeshop.activemq.IMessageSender;
+import mpp.course.spring2017.project.coffeeshop.activemq.MessageSender;
 import mpp.course.spring2017.project.coffeeshop.dao.BeverageSizePriceDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.CustomerOrderDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.ProductDaoFactory;
@@ -96,6 +98,8 @@ public class CashierController {
 	private final int SOFT_DRINK = 4;
 	private Account loginAccount = null;
 	private CashierModel model = new CashierModel();
+	
+	IMessageSender msgSender;
 	
 	public Account getLoginAccount() {
 		return loginAccount;
@@ -326,6 +330,17 @@ public class CashierController {
         load2GridPane(FRUIT_DRINK, gridFruitDrink);
         load2GridPane(SOFT_DRINK, gridSoftDrink);
         load2GridPane(FOOD, gridFood);
+        
+        //new activemq message sender
+        msgSender = new MessageSender(CoffeeShopUtils.SERVER_URL, CoffeeShopUtils.QUEUE_NAME);
+        try {
+	        if(!msgSender.createConnection()) {
+	        	System.out.println("Failed to create connection to ActiveMQ.");
+	        }
+        }
+        catch(JMSException jmsEx) {
+        	jmsEx.printStackTrace();
+        }
 	}
 
 	private ObservableList<OrderTableItem> data;
@@ -465,11 +480,18 @@ public class CashierController {
 	@FXML protected void handleOrderButtonAction(ActionEvent event) {
 		if (validateFields()) {
 			CustomerOrder co = buildNewCustomerOrder();
-			CustomerOrderDaoFactory.getInstance().newCustomerOrder(co);
+			boolean flag = CustomerOrderDaoFactory.getInstance().newCustomerOrder(co);
 			model.setCurrentOrder(co);
 			model.setNewOrder(false);
 			btnOrder.setDisable(true);
 			btnPrint.setDisable(false);
+			
+			try {
+				if(flag) msgSender.sendMessage(co.getOrderNo());
+			}
+			catch(JMSException jmsEx) {
+				jmsEx.printStackTrace();
+			}
 		}
 	}
 

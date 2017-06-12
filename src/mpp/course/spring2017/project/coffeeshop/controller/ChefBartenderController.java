@@ -1,8 +1,13 @@
 package mpp.course.spring2017.project.coffeeshop.controller;
 
 import java.util.List;
-import com.sun.prism.impl.Disposer.Record;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
+
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -10,10 +15,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ContextMenu;
@@ -32,7 +37,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.stage.Stage;
+import mpp.course.spring2017.project.coffeeshop.activemq.IMessageReceiver;
+import mpp.course.spring2017.project.coffeeshop.activemq.MessageReceiver;
+import mpp.course.spring2017.project.coffeeshop.activemq.OrderListener;
 import mpp.course.spring2017.project.coffeeshop.dao.AccountDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.BeverageSizePriceDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.CustomerOrderDaoFactory;
@@ -45,8 +52,9 @@ import mpp.course.spring2017.project.coffeeshop.model.Product;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopLoginView;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopMenuItem;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopToggleButton;
+import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopUtils;
 
-public class ChefBartenderController {
+public class ChefBartenderController  implements MessageListener{
 	@FXML private TableView<OrderTableItem> tblOrderLine;
 	@FXML private TableColumn<OrderTableItem,Product> colProduct;
 	@FXML private TableColumn<OrderTableItem,String> colSize;
@@ -62,6 +70,9 @@ public class ChefBartenderController {
 	private final String ORDER_STATUS_ALARM = "Token is alarm";
 	private final String ORDER_STATUS_DONE = "Done";
 	private CoffeeShopLoginView coffeeShopLoginView = null;
+	private Boolean has_message = false;
+	private IMessageReceiver msgReceiver = null;
+	//private static ChefBartenderController instance = new ChefBartenderController();
 	
 	MenuItem createMenuItem(String name, CustomerOrder co, ToggleButton btn) {
 		MenuItem item = new CoffeeShopMenuItem(name, new Object[] {co, btn});
@@ -83,6 +94,11 @@ public class ChefBartenderController {
 		return item;
 	}
 	
+	public void handleNewCommingOrder(String newOrder) {
+		System.out.println("One new Customer Order [" + newOrder + "] comming.");
+		//load2GridPane(gridOrders);
+	}
+	
 	private void setControlStatus(String status, ToggleButton btn, MenuItem item) {
 		if (status.equals(ORDER_STATUS_PROCESSING)) {
     		btn.setStyle("-fx-border-color: green");
@@ -92,7 +108,7 @@ public class ChefBartenderController {
     		item.setDisable(true);
     	}
 	}
-	private void load2GridPane(GridPane target) {
+	private synchronized void load2GridPane(GridPane target) {
 		if (target.getColumnConstraints() != null)
 			target.getColumnConstraints().clear();
 		if (target.getRowConstraints() != null)
@@ -203,13 +219,39 @@ public class ChefBartenderController {
 		firstAnchorPane.setMinWidth(300);
 		firstAnchorPane.setMaxWidth(300);
 		loginAccount = AccountDaoFactory.getInstance().findAccount("lan");
+		
+		msgReceiver = new MessageReceiver(CoffeeShopUtils.SERVER_URL, CoffeeShopUtils.QUEUE_NAME);
+		try {
+			if(!msgReceiver.createConnection()) {
+				System.out.println("Failed to create connection to ActiveMQ.");
+			} 
+			else {
+				//msgReceiver.registerListener(new OrderListener(this));
+				msgReceiver.registerListener(this);
+			}
+		}
+		catch(JMSException jmsEx) {
+        	jmsEx.printStackTrace();
+        }
 	}
+	
 	
 	@FXML
 	void initialize(){
 		initializeTableView();
 		initializeOthers();
 		load2GridPane(gridOrders);
+		new Thread() {
+	        public void run() {
+	            while(true) {
+					if (has_message) {
+						has_message = false;
+						load2GridPane(gridOrders);
+						System.out.println("refreshed order");
+					}
+	            }
+	        }
+	    }.start();
 	}
 
 	private ObservableList<OrderTableItem> data;
@@ -296,4 +338,58 @@ public class ChefBartenderController {
 			coffeeShopLoginView.unhide();
 		}
 	}
+
+	@Override
+	public void onMessage(Message msg) {
+		//try {
+			
+			if (! (msg instanceof TextMessage))
+				throw new RuntimeException("no text message");
+			TextMessage tm = (TextMessage) msg;
+			//synchronized (has_message) {
+				
+				has_message = true;
+				System.out.println("OrderListener has a message comming..............");
+				final Task<Void> task = new Task<Void>() {
+
+				     @Override protected Void call() throws Exception {
+				    	 System.out.println("task is running.........");
+				         //synchronized (has_message) {
+							//if (has_message) {
+								Platform.runLater(new Runnable() {
+					                 @Override public void run() {
+					                     load2GridPane(gridOrders);
+					                     System.out.println("task load new order");
+					                     //has_message = false;
+					                 }
+					             });
+							//}
+						//}
+				         return null;
+				     }
+				 };
+				 new Thread(task).start();
+			//}
+			//load2GridPane(gridOrders);
+		//}
+		//catch (JMSException e) {
+		//	e.printStackTrace();
+		//}
+	}
+	
+	/*@Override
+	public void run() {
+		msgReceiver = new MessageReceiver(CoffeeShopUtils.SERVER_URL, CoffeeShopUtils.QUEUE_NAME);
+		try {
+			if(!msgReceiver.createConnection()) {
+				System.out.println("Failed to create connection to ActiveMQ.");
+			} 
+			else {
+				msgReceiver.registerListener(new OrderListener(this));
+			}
+		}
+		catch(JMSException jmsEx) {
+        	jmsEx.printStackTrace();
+        }
+	}*/
 }

@@ -3,12 +3,10 @@ package mpp.course.spring2017.project.coffeeshop.activemq;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
-import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Queue;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -49,7 +47,7 @@ public class MessageReceiver implements IMessageReceiver {
 		}
 	}
 
-	@Override
+	/*@Override
 	public String hasMessage() throws JMSException {
 		message = "";
 		try {
@@ -74,10 +72,18 @@ public class MessageReceiver implements IMessageReceiver {
 			System.out.println("sendMessage: " + ex.getMessage());
 		}
 		return message;
-	}
+	}*/
 
 	@Override
 	public void closeConnection() throws JMSException {
 		con.close();
+	}
+
+	@Override
+	public void registerListener(MessageListener listener) throws JMSException {
+		Queue queue = session.createQueue(queueName);
+		MessageConsumer consumer = session.createConsumer(queue);
+		consumer.setMessageListener(listener);
+		con.start();
 	}
 }
