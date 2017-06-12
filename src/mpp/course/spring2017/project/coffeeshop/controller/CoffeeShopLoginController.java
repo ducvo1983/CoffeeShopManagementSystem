@@ -48,6 +48,7 @@ import mpp.course.spring2017.project.coffeeshop.view.AdminView;
 import mpp.course.spring2017.project.coffeeshop.view.CashierView;
 import mpp.course.spring2017.project.coffeeshop.view.ChefBartenderView;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopLoginView;
+import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopUtils;
  
 public class CoffeeShopLoginController {
     @FXML private Text txtErrorMessage;
@@ -133,19 +134,17 @@ public class CoffeeShopLoginController {
     	return false;
     }
     
+    private boolean matchPassword(String acctPassword, String inputPassword) {
+    	return acctPassword.equals(inputPassword);
+    }
     @FXML protected void handleSubmitButtonAction(ActionEvent event) {
     	if (validateFields()) {
     		Account acct = AccountDaoFactory.getInstance().findAccount(txtUserName.getText());
     		String passwordHashText = "";
 			try {
 				if (acct != null) {
-					MessageDigest m = MessageDigest.getInstance("MD5");
-					m.reset();
-					m.update(txtPassword.getText().trim().getBytes());
-					byte[] digest = m.digest();
-					BigInteger bigInt = new BigInteger(1, digest);
-					passwordHashText = bigInt.toString(16);
-					if (acct.getPassword().equals(passwordHashText)) {
+					passwordHashText = CoffeeShopUtils.getMD5(txtPassword.getText());
+					if (matchPassword(acct.getPassword(), passwordHashText)) {
 		    			if (showForm(acct)) {
 		    				txtErrorMessage.setText("");
 		    				coffeeShopLoginView.hide();

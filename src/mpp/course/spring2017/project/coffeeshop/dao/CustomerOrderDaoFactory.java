@@ -13,8 +13,8 @@ public class CustomerOrderDaoFactory {
 		return impl.getAllCustomerOrders();
 	}
 	
-	public boolean newCustomerOrder(CustomerOrder o) {
-		return impl.newCustomerOrder(o);
+	public boolean insertNewCustomerOrder(CustomerOrder o) {
+		return impl.insertNewCustomerOrder(o);
 	}
 	public boolean updateCustomerOrder(CustomerOrder o) {
 		return impl.updateCustomerOrder(o);
