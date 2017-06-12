@@ -9,7 +9,7 @@ import mpp.course.spring2017.project.coffeeshop.model.CustomerOrder;
 class CustomerOrderDaoImpl implements ICustomerOrderDao {
 
 	@Override
-	public boolean newCustomerOrder(CustomerOrder e) {
+	public boolean insertNewCustomerOrder(CustomerOrder e) {
 		boolean flag = false;
 		Session ss=HibernateFactory.getInstance().openSession();
 		

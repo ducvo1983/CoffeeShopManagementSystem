@@ -19,7 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
 public class CoffeeShopUtils {
-	public final static String SERVER_URL = "tcp://localhost:61616";
+	public final static String SERVER_URL = "tcp://10.0.0.22:61616";
 	public final static String QUEUE_NAME = "orderQ";
 	
 	public static Image convertByteArray2JavaFXImage(byte[] raw, final int width, final int height) {

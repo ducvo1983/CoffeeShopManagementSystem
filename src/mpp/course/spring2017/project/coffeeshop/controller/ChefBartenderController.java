@@ -261,17 +261,27 @@ public class ChefBartenderController  implements MessageListener{
 		for (OrderLine odl : odls) {
 			Product p = odl.getProduct();
 			List<BeverageSizePrice> bsps = BeverageSizePriceDaoFactory.getInstance().getBeverageSizePrices(p.getID());
-			if (bsps != null) {
+			if (bsps != null && bsps.size() > 0) {
+				boolean found = false;
 				for (BeverageSizePrice bsp: bsps) {
-					addRow(odl.getProduct(), bsp);
+					if (bsp.getBeverageSize().getDescription().equals(odl.getBeverageSize()))
+					{
+						addRow(odl, bsp);
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					addRow(odl, null);
 				}
 			} else {
-				addRow(odl.getProduct(), null);
+				addRow(odl, null);
 			}
 		}
 	}
-	public void addRow(Product p, BeverageSizePrice bsp){        
-	    try{      
+	public void addRow(OrderLine o, BeverageSizePrice bsp){        
+	    try{    
+	    		Product p = o.getProduct();
 	            OrderTableItem odl = new OrderTableItem();
 	            odl.getProduct().set(p);
 	            if (bsp == null) {
@@ -281,7 +291,7 @@ public class ChefBartenderController  implements MessageListener{
 	            	odl.getProductSize().set(bsp.getBeverageSize().getDescription());
 	            	odl.getProductPrice().set(new Double(bsp.getUnitPrice()));
 	            }
-	            odl.getQuantity().set(String.valueOf(1));
+	            odl.getQuantity().set(String.valueOf(o.getQuantity()));
 	            data.add(odl);                  
 	            tblOrderLine.setItems(data);
 	    }
@@ -291,8 +301,9 @@ public class ChefBartenderController  implements MessageListener{
 	    }
 	}
 	
-	public void updateOrInsertRow(Product p, BeverageSizePrice bsp) {
+	public void updateOrInsertRow(OrderLine o, BeverageSizePrice bsp) {
 		try{      
+			Product p = o.getProduct();
             boolean found = false;
             for (OrderTableItem odl : data) {
             	if (odl.getProduct().get().getName().equals(p.getName())) {
@@ -314,7 +325,7 @@ public class ChefBartenderController  implements MessageListener{
             	}
             }
             if (!found) {
-            	addRow(p, bsp);
+            	addRow(o, bsp);
             } else {
             	tblOrderLine.refresh();
             }
@@ -368,7 +379,13 @@ public class ChefBartenderController  implements MessageListener{
 				         return null;
 				     }
 				 };
-				 new Thread(task).start();
+				 Thread t = new Thread(task);
+				 t.start();
+				 try {
+					 t.join();
+				 } catch (InterruptedException e) {
+					 
+				 }
 			//}
 			//load2GridPane(gridOrders);
 		//}
