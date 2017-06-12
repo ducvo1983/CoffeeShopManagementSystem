@@ -120,6 +120,10 @@ public class CoffeeShopLoginController {
 	    		ChefBartenderController controller = (ChefBartenderController) loader.getController();
 	    		controller.setLoginView(coffeeShopLoginView);
 	    		//controller.setLoginAccount(acct);
+	    		
+	    		/*Thread thr = new Thread(controller);
+	    		thr.setDaemon(true);
+	    		thr.start();*/
 	    	}
 	    		return true;
 	    	}
