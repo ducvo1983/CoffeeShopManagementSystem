@@ -28,7 +28,7 @@ public class MessageSender implements IMessageSender {
 			factory = new ActiveMQConnectionFactory(url);  // ActiveMQ-specific (more)
 			con = factory.createConnection();
 			session = con.createSession(false, Session.AUTO_ACKNOWLEDGE);  // non-transacted session (more)
-			
+
 			return true;
 		}
 		catch(Exception ex) {
@@ -54,6 +54,7 @@ public class MessageSender implements IMessageSender {
 
 	@Override
 	public void closeConnection() throws JMSException {
+		session.close();
 		con.close();
 	}
 }

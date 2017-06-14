@@ -2,12 +2,17 @@ package mpp.course.spring2017.project.coffeeshop.view;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.Properties;
 
 import javax.imageio.ImageIO;
+import javax.jms.JMSException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
@@ -16,12 +21,35 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import mpp.course.spring2017.project.coffeeshop.activemq.MessageReceiver;
 
 public class CoffeeShopUtils {
-	public final static String SERVER_URL = "tcp://localhost:61616";
-	public final static String QUEUE_NAME = "orderQ";
-	
+	public static String getConfig(String config) {
+		String value = "";
+		InputStream input = null;
+		try {
+			//load config.properties file
+			Properties prop = new Properties();
+			input = new FileInputStream("bin/config.properties");
+			prop.load(input);			
+			value = prop.getProperty(config);			
+		} catch (IOException io) {
+			io.printStackTrace();
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return value;
+	}
+
 	public static Image convertByteArray2JavaFXImage(byte[] raw, final int width, final int height) {
         WritableImage image = new WritableImage(width, height);
         try {
@@ -32,6 +60,18 @@ public class CoffeeShopUtils {
         }
         return image;
     }
+	
+	public static byte[] convertJavaFXImage2ByteArray(ImageView imageProduct) {
+		try {
+			ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+			ImageIO.write(SwingFXUtils.fromFXImage(imageProduct.getImage(), null), "png", byteOutput);
+			return byteOutput.toByteArray();
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
 	
 	public static void showErrorMessgge(String msg) {
 		new Alert(Alert.AlertType.ERROR, msg).showAndWait();

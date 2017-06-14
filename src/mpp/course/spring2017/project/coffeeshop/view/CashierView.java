@@ -2,6 +2,8 @@ package mpp.course.spring2017.project.coffeeshop.view;
 
 import java.io.IOException;
 
+import javax.jms.JMSException;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,6 +27,13 @@ public class CashierView {
         //stage.setResizable(false);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e) {
+            	try {
+	            	((CashierController)loader.getController()).getMsgReceiver().closeConnection();
+	            	((CashierController)loader.getController()).getMsgSender().closeConnection();
+            	} 
+            	catch(JMSException jms) {
+            		jms.printStackTrace();
+            	}
                 ((CashierController) loader.getController()).showParent();
             }
         });

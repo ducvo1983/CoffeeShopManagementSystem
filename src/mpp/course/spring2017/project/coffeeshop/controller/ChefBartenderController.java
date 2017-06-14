@@ -39,7 +39,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import mpp.course.spring2017.project.coffeeshop.activemq.IMessageReceiver;
 import mpp.course.spring2017.project.coffeeshop.activemq.MessageReceiver;
-import mpp.course.spring2017.project.coffeeshop.activemq.OrderListener;
 import mpp.course.spring2017.project.coffeeshop.dao.AccountDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.BeverageSizePriceDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.CustomerOrderDaoFactory;
@@ -54,7 +53,7 @@ import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopMenuItem;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopToggleButton;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopUtils;
 
-public class ChefBartenderController  implements MessageListener{
+public class ChefBartenderController implements MessageListener {
 	@FXML private TableView<OrderTableItem> tblOrderLine;
 	@FXML private TableColumn<OrderTableItem,Product> colProduct;
 	@FXML private TableColumn<OrderTableItem,String> colSize;
@@ -70,9 +69,7 @@ public class ChefBartenderController  implements MessageListener{
 	private final String ORDER_STATUS_ALARM = "Token is alarm";
 	private final String ORDER_STATUS_DONE = "Done";
 	private CoffeeShopLoginView coffeeShopLoginView = null;
-	private Boolean has_message = false;
 	private IMessageReceiver msgReceiver = null;
-	//private static ChefBartenderController instance = new ChefBartenderController();
 	
 	MenuItem createMenuItem(String name, CustomerOrder co, ToggleButton btn) {
 		MenuItem item = new CoffeeShopMenuItem(name, new Object[] {co, btn});
@@ -92,11 +89,6 @@ public class ChefBartenderController  implements MessageListener{
             }
         });
 		return item;
-	}
-	
-	public void handleNewCommingOrder(String newOrder) {
-		System.out.println("One new Customer Order [" + newOrder + "] comming.");
-		//load2GridPane(gridOrders);
 	}
 	
 	private void setControlStatus(String status, ToggleButton btn, MenuItem item) {
@@ -220,19 +212,17 @@ public class ChefBartenderController  implements MessageListener{
 		firstAnchorPane.setMaxWidth(300);
 		loginAccount = AccountDaoFactory.getInstance().findAccount("lan");
 		
-		msgReceiver = new MessageReceiver(CoffeeShopUtils.SERVER_URL, CoffeeShopUtils.QUEUE_NAME);
 		try {
+			msgReceiver = new MessageReceiver(CoffeeShopUtils.getConfig("activeMQ_URL"), CoffeeShopUtils.getConfig("orderQName"));
 			if(!msgReceiver.createConnection()) {
 				System.out.println("Failed to create connection to ActiveMQ.");
 			} 
 			else {
-				//msgReceiver.registerListener(new OrderListener(this));
 				msgReceiver.registerListener(this);
 			}
-		}
-		catch(JMSException jmsEx) {
+		} catch(JMSException jmsEx) {
         	jmsEx.printStackTrace();
-        }
+        } 
 	}
 	
 	
@@ -241,17 +231,6 @@ public class ChefBartenderController  implements MessageListener{
 		initializeTableView();
 		initializeOthers();
 		load2GridPane(gridOrders);
-		new Thread() {
-	        public void run() {
-	            while(true) {
-					if (has_message) {
-						has_message = false;
-						load2GridPane(gridOrders);
-						System.out.println("refreshed order");
-					}
-	            }
-	        }
-	    }.start();
 	}
 
 	private ObservableList<OrderTableItem> data;
@@ -341,55 +320,20 @@ public class ChefBartenderController  implements MessageListener{
 
 	@Override
 	public void onMessage(Message msg) {
-		//try {
-			
-			if (! (msg instanceof TextMessage))
-				throw new RuntimeException("no text message");
-			TextMessage tm = (TextMessage) msg;
-			//synchronized (has_message) {
-				
-				has_message = true;
-				System.out.println("OrderListener has a message comming..............");
-				final Task<Void> task = new Task<Void>() {
+		if (!(msg instanceof TextMessage)) throw new RuntimeException("no text message");
+		//TextMessage tm = (TextMessage) msg;
+		//String msg = tm.getText(); //in case want to get value
 
-				     @Override protected Void call() throws Exception {
-				    	 System.out.println("task is running.........");
-				         //synchronized (has_message) {
-							//if (has_message) {
-								Platform.runLater(new Runnable() {
-					                 @Override public void run() {
-					                     load2GridPane(gridOrders);
-					                     System.out.println("task load new order");
-					                     //has_message = false;
-					                 }
-					             });
-							//}
-						//}
-				         return null;
-				     }
-				 };
-				 new Thread(task).start();
-			//}
-			//load2GridPane(gridOrders);
-		//}
-		//catch (JMSException e) {
-		//	e.printStackTrace();
-		//}
+		final Task<Void> task = new Task<Void>() {
+		     @Override protected Void call() throws Exception {
+		    	 Platform.runLater(new Runnable() {
+	                 @Override public void run() {
+	                     load2GridPane(gridOrders);
+	                 }
+	             });
+		         return null;
+		     }
+		 };
+		 new Thread(task).start();
 	}
-	
-	/*@Override
-	public void run() {
-		msgReceiver = new MessageReceiver(CoffeeShopUtils.SERVER_URL, CoffeeShopUtils.QUEUE_NAME);
-		try {
-			if(!msgReceiver.createConnection()) {
-				System.out.println("Failed to create connection to ActiveMQ.");
-			} 
-			else {
-				msgReceiver.registerListener(new OrderListener(this));
-			}
-		}
-		catch(JMSException jmsEx) {
-        	jmsEx.printStackTrace();
-        }
-	}*/
 }

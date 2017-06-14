@@ -47,35 +47,9 @@ public class MessageReceiver implements IMessageReceiver {
 		}
 	}
 
-	/*@Override
-	public String hasMessage() throws JMSException {
-		message = "";
-		try {
-			Queue queue = session.createQueue(queueName);
-			MessageConsumer consumer = session.createConsumer(queue);
-			consumer.setMessageListener(new MessageListener() {
-				public void onMessage(Message msg) {
-					try {
-						if (! (msg instanceof TextMessage))
-							throw new RuntimeException("no text message");
-						TextMessage tm = (TextMessage) msg;
-						message = tm.getText();
-					}
-					catch (JMSException e) {
-						System.err.println("Error reading message");
-					}
-			    }
-			});
-		}
-		catch(Exception ex) {
-			con.close();
-			System.out.println("sendMessage: " + ex.getMessage());
-		}
-		return message;
-	}*/
-
 	@Override
 	public void closeConnection() throws JMSException {
+		session.close();
 		con.close();
 	}
 

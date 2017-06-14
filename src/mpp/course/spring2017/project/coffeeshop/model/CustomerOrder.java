@@ -29,7 +29,7 @@ public class CustomerOrder {
 	@Column(name="CUSTOMER_NAME")
 	private String customerName;
 	
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.DETACH)
 	@JoinColumn(name="TOKEN_ID")
 	private Token token;
 	
@@ -42,7 +42,7 @@ public class CustomerOrder {
 	@Column(name="UPDATE_TIME")
 	private LocalDate updateTime;
 	
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(cascade=CascadeType.DETACH)
 	@JoinColumn(name="ACCOUNT_ID")
 	private Account account;
 
