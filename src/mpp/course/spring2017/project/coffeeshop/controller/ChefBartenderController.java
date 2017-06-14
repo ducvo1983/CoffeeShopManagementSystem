@@ -71,6 +71,14 @@ public class ChefBartenderController implements MessageListener {
 	private CoffeeShopLoginView coffeeShopLoginView = null;
 	private IMessageReceiver msgReceiver = null;
 	
+	public IMessageReceiver getMsgReceiver() {
+		return msgReceiver;
+	}
+
+	public void setMsgReceiver(IMessageReceiver msgReceiver) {
+		this.msgReceiver = msgReceiver;
+	}
+
 	MenuItem createMenuItem(String name, CustomerOrder co, ToggleButton btn) {
 		MenuItem item = new CoffeeShopMenuItem(name, new Object[] {co, btn});
 		item.setOnAction(new EventHandler<ActionEvent>() {

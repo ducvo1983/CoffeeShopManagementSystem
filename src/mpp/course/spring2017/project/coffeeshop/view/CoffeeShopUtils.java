@@ -12,7 +12,6 @@ import java.security.MessageDigest;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
-import javax.jms.JMSException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
@@ -23,7 +22,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import mpp.course.spring2017.project.coffeeshop.activemq.MessageReceiver;
 
 public class CoffeeShopUtils {
 	public static String getConfig(String config) {

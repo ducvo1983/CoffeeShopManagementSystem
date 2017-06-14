@@ -19,6 +19,8 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import mpp.course.spring2017.project.coffeeshop.dao.EmployeeDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.model.Employee;
@@ -26,9 +28,11 @@ import mpp.course.spring2017.project.coffeeshop.model.Employee;
 public class ViewEmployeeController implements Initializable {
 	private List<Employee> listEmployee;
 	private ObservableList<Employee> obListEmployee;
+	private final String IMAGE_DEL = "file:images/delete.png";
 	
 	@FXML TableView<Employee> tblViewEmployees; 
 	
+	@SuppressWarnings("unchecked")
 	private void loadTableView() {
 		tblViewEmployees.getItems().clear();
 		listEmployee = EmployeeDaoFactory.getInstance().getAllEmployees();
@@ -63,7 +67,8 @@ public class ViewEmployeeController implements Initializable {
 	            {
 	                final TableCell<Employee, String> cell = new TableCell<Employee, String>()
 	                {
-	                    final Button btn = new Button("delete");
+	                    //final Button btn = new Button("delete");
+	                    final Button btn = new Button("", new ImageView(new Image(IMAGE_DEL)));
 	                    @Override
 	                    public void updateItem(String item, boolean empty)
 	                    {

@@ -363,7 +363,7 @@ public class CashierController implements MessageListener {
 	        }
             
             //new activemq message receiver to receive new item from admin user
-            msgReceiver = new MessageReceiver(CoffeeShopUtils.getConfig("activeMQ_URL"), CoffeeShopUtils.getConfig("productQ"));
+            msgReceiver = new MessageReceiver(CoffeeShopUtils.getConfig("activeMQ_URL"), CoffeeShopUtils.getConfig("productQName"));
 			if(!msgReceiver.createConnection()) {
 				System.out.println("Failed to create connection to ActiveMQ for product queue.");
 			} 
