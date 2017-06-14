@@ -67,6 +67,7 @@ public class OrderManagementController implements Initializable {
 	@FXML private TextField txtCustomer;
 	@FXML private ComboBox<Token> cboToken;
 	@FXML private ComboBox<String> cboOrderType;
+	@FXML private ComboBox<String> cboStatus;
 	@FXML private Text txtTax;
 	@FXML private Text txtTotal;
 	@FXML private Button btnCancel;
@@ -130,7 +131,7 @@ public class OrderManagementController implements Initializable {
 		            @Override
 		            public void handle(ActionEvent e) {
 		            	curOrder = (CustomerOrder) ((CoffeeShopButton)e.getSource()).getObject();
-		                loadOrderLines(curOrder);
+		                loadOrder(curOrder);
 		            }
 		        });
 				target.add(btn, j, i);
@@ -138,12 +139,14 @@ public class OrderManagementController implements Initializable {
 		}
 	}
 
-	private void loadOrderLines(CustomerOrder co) {
+	private void loadOrder(CustomerOrder co) {
 		txtCustomer.setText(co.getCustomerName());
 		cboOrderType.setValue(co.getOrderType());
 		cboToken.setValue(co.getToken());
+		cboStatus.setValue(co.getStatus());
 		txtTotal.setText(String.valueOf(co.getAmount()));
-		List<OrderLine> odls = OrderLineDaoFactory.getInstance().getOrderLines(co.getOrderNo());
+		data.clear();
+		List<OrderLine> odls = co.getListOrderLine();//OrderLineDaoFactory.getInstance().getOrderLines(co.getOrderNo());
 		if (odls != null) {
 			for (OrderLine odl : odls) {
 				List<BeverageSizePrice> bsps = BeverageSizePriceDaoFactory.getInstance().getBeverageSizePrices(odl.getProduct().getID());
@@ -283,6 +286,13 @@ public class OrderManagementController implements Initializable {
 			}
 			
 		});
+		ObservableList<String> statuses = FXCollections.observableArrayList();
+		statuses.addAll(new String[] { "New",
+				"Processing",
+				"Token is alarm",
+				"Done"
+		});
+		cboStatus.setItems(statuses);
 		//loginAccount = AccountDaoFactory.getInstance().findAccount("tri");
 		//txtTax.setText("7%");
 		//btnSave.setDisable(false);
@@ -355,6 +365,7 @@ public class OrderManagementController implements Initializable {
 		txtCustomer.setText("");
 		cboToken.getSelectionModel().selectFirst();
 		cboOrderType.getSelectionModel().selectFirst();
+		cboStatus.getSelectionModel().selectFirst();
 		//txtTax.setText("0.0");
 		txtTotal.setText("0.0");
 		curOrder = null;
@@ -373,6 +384,10 @@ public class OrderManagementController implements Initializable {
 			CoffeeShopUtils.showErrorMessgge("Token is required");
 			return false;
 		}
+		if (cboStatus.getValue() == null || cboStatus.getValue().equals("")) {
+			CoffeeShopUtils.showErrorMessgge("Status is required");
+			return false;
+		}
 		if (tblOrderLine.getItems().size() == 0) {
 			CoffeeShopUtils.showErrorMessgge("Please select the product first");
 			return false;
@@ -386,15 +401,14 @@ public class OrderManagementController implements Initializable {
 	CustomerOrder buildNewCustomerOrder() {
 		CustomerOrder o = curOrder;
 		o.setCustomerName(txtCustomer.getText());
-		//o.setAccount(loginAccount);
+		o.setAccount(loginAccount);
 		o.setAmount(Float.parseFloat(txtTotal.getText()));
 		o.setListOrderLine(getOrderLines());
 		o.setOrderDate(LocalDate.now());
-		//o.setOrderNo(generateOrderNo());
 		o.setOrderType(cboOrderType.getSelectionModel().getSelectedItem());
-		//o.setStatus("New");
+		o.setStatus(cboStatus.getSelectionModel().getSelectedItem());
 		o.setTax(0.07f);
-		//o.setToken(cboToken.getValue());
+		o.setToken(cboToken.getValue());
 		o.setUpdateTime(LocalDate.now());
 		return o;
 	}
@@ -408,8 +422,10 @@ public class OrderManagementController implements Initializable {
 	}
 	@FXML protected void handleCancelButtonAction(ActionEvent event) {
 		if (curOrder != null) {
+			OrderLineDaoFactory.getInstance().deleteOrderLines(curOrder.getOrderNo());
 			CustomerOrderDaoFactory.getInstance().deleteCustomerOrder(curOrder);
 			clearOrder();
+			load2GridPane(gridOrders);
 		}
     }
 	
@@ -417,7 +433,7 @@ public class OrderManagementController implements Initializable {
 		if (validateFields()) {
 			if (curOrder != null) {
 				CustomerOrder co = buildNewCustomerOrder();
-				CustomerOrderDaoFactory.getInstance().insertNewCustomerOrder(co);
+				CustomerOrderDaoFactory.getInstance().updateCustomerOrder(co);
 			} else {
 				CoffeeShopUtils.showErrorMessgge("Please select an order");
 			}

@@ -84,6 +84,7 @@ public class CashierController {
 	@FXML private TextField txtCustomer;
 	@FXML private ComboBox<Token> cboToken;
 	@FXML private ComboBox<String> cboOrderType;
+	@FXML private ComboBox<String> cboStatus;
 	@FXML private Label lblTax;
 	@FXML private Label lblTotal;
 	@FXML private Button btnNew;
@@ -161,9 +162,13 @@ public class CashierController {
 			        		item.setOnAction(new EventHandler<ActionEvent>() {
 			                    @Override
 			                    public void handle(ActionEvent event) {
-			                        CoffeeShopMenuItem item = (CoffeeShopMenuItem) event.getSource();
-			                        CashierController.this.updateOrInsertRow((Product) item.getObject(0), (BeverageSizePrice) item.getObject(1));
-			                        calculateTotal();
+			                    	if (model.getCurrentOrder() == null) {
+				                        CoffeeShopMenuItem item = (CoffeeShopMenuItem) event.getSource();
+				                        CashierController.this.updateOrInsertRow((Product) item.getObject(0), (BeverageSizePrice) item.getObject(1));
+				                        calculateTotal();
+			                    	} else {
+			                    		CoffeeShopUtils.showErrorMessgge("The order is already in handling");
+			                    	}
 			                    }
 			                });
 			        		contextMenu.getItems().add(item);
@@ -181,8 +186,12 @@ public class CashierController {
 				            	selectedProd.getProductCatelogy().getID() == FRUIT_DRINK) {
 				        		contextMenu.show(cfBtn, event.getScreenX(), event.getScreenY());
 				        	} else {
-				        		CashierController.this.updateOrInsertRow(selectedProd, null);
-				        		calculateTotal();
+				        		if (model.getCurrentOrder() == null) {
+				        			CashierController.this.updateOrInsertRow(selectedProd, null);
+				        			calculateTotal();
+				        		} else {
+		                    		CoffeeShopUtils.showErrorMessgge("The order is already in handling");
+		                    	}
 				        	}
 				        }
 				    }
@@ -192,11 +201,6 @@ public class CashierController {
 		}
 	}
 
-	ObservableList<String> sizeChoice = FXCollections.observableArrayList (
-		    new String("Small"),
-		    new String("Medium"),
-		    new String("Large")
-	);
 
 	//Define the delete button cell
     private class DelButtonCell extends TableCell<Record, Boolean> {
@@ -313,6 +317,13 @@ public class CashierController {
 			}
 			
 		});
+		ObservableList<String> statuses = FXCollections.observableArrayList();
+		statuses.addAll(new String[] { "New",
+				"Processing",
+				"Token is alarm",
+				"Done"
+		});
+		cboStatus.setItems(statuses);
 		//loginAccount = AccountDaoFactory.getInstance().findAccount("tri");
 		lblTax.setText("7%");
 		model.setCurrentOrder(null);
@@ -326,10 +337,11 @@ public class CashierController {
 	void initialize(){
 		initializeTableView();
 		initializeOthers();
-		load2GridPane(STIMULANT_DRINK, gridStimulantDrink);
+		handleSelectionChanged(null);
+		/*load2GridPane(STIMULANT_DRINK, gridStimulantDrink);
         load2GridPane(FRUIT_DRINK, gridFruitDrink);
         load2GridPane(SOFT_DRINK, gridSoftDrink);
-        load2GridPane(FOOD, gridFood);
+        load2GridPane(FOOD, gridFood);*/
         
         //new activemq message sender
         msgSender = new MessageSender(CoffeeShopUtils.SERVER_URL, CoffeeShopUtils.QUEUE_NAME);
@@ -419,6 +431,7 @@ public class CashierController {
 		txtCustomer.setText("");
 		cboToken.getSelectionModel().selectFirst();
 		cboOrderType.getSelectionModel().selectFirst();
+		cboStatus.getSelectionModel().selectFirst();
 		//lblTax.setText("0.0");
 		lblTotal.setText("0.0");
 	}
@@ -436,10 +449,15 @@ public class CashierController {
 			CoffeeShopUtils.showErrorMessgge("Token is required");
 			return false;
 		}
+		if (cboStatus.getValue() == null || cboStatus.getValue().equals("")) {
+			CoffeeShopUtils.showErrorMessgge("Status is required");
+			return false;
+		}
 		if (tblOrderLine.getItems().size() == 0) {
 			CoffeeShopUtils.showErrorMessgge("Please select the product first");
 			return false;
 		}
+		
 		return true;
 	}
 	String generateOrderNo() {
@@ -454,7 +472,7 @@ public class CashierController {
 		o.setOrderDate(LocalDate.now());
 		o.setOrderNo(generateOrderNo());
 		o.setOrderType(cboOrderType.getSelectionModel().getSelectedItem());
-		o.setStatus("New");
+		o.setStatus(cboStatus.getValue());
 		o.setTax(0.07f);
 		o.setToken(cboToken.getValue());
 		o.setUpdateTime(LocalDate.now());

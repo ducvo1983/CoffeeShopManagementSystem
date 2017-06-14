@@ -137,4 +137,26 @@ class OrderLineDaoImpl implements IOrderLineDao {
 		
 		return result;
 	}
+
+	@Override
+	public boolean deleteOrderLines(String orderNo) {
+		boolean flag = false;
+		Session ss=HibernateFactory.getInstance().openSession();
+		
+		try {
+			List<OrderLine> orderLines = getOrderLines(orderNo);
+			for (OrderLine odl : orderLines) {
+				ss.beginTransaction();
+				ss.delete(odl);			
+				ss.getTransaction().commit();
+			}
+			flag = true;
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		} finally {
+			ss.close();
+		}
+
+		return flag;
+	}
 }
