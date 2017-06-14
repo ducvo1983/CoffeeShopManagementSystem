@@ -57,7 +57,7 @@ public class CustomerOrder {
 		this.orderType = orderType;
 	}
 
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="customerOrder")
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, mappedBy="customerOrder")
 	private List<OrderLine> listOrderLine;
 		
 	public List<OrderLine> getListOrderLine() {

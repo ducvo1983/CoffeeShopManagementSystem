@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane dividerPositions="0.506265664160401" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mpp.course.spring2017.project.coffeeshop.controller.OrderManagementController">
+  <items>
+    <AnchorPane fx:id="firstAnchorPane" maxWidth="380.0" minHeight="0.0" minWidth="380.0" prefWidth="380.0">
+         <children>
+            <VBox>
+               <children>
+                  <TableView id="tblOrderLine" fx:id="tblOrderLine" editable="true" prefHeight="384.0" prefWidth="377.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columns>
+                      <TableColumn fx:id="colProduct" editable="false" prefWidth="75.0" text="Product" />
+                      <TableColumn fx:id="colSize" prefWidth="75.0" text="Size" />
+                        <TableColumn fx:id="colPrice" editable="false" prefWidth="75.0" text="Price" />
+                        <TableColumn fx:id="colQuantity" prefWidth="75.0" text="Quantity" />
+                        <TableColumn fx:id="colDeleteButton" prefWidth="75.0" />
+                    </columns>
+                  </TableView>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <TextField fx:id="txtCustomer" prefHeight="27.0" prefWidth="120.0" GridPane.columnIndex="1" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Customer name" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Order type" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="cboOrderType" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Token" GridPane.rowIndex="2" />
+                        <ComboBox fx:id="cboToken" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tax" GridPane.rowIndex="4" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total" GridPane.rowIndex="5" />
+                        <Text fx:id="txtTax" strokeType="OUTSIDE" strokeWidth="0.0" text="7%" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Text fx:id="txtTotal" strokeType="OUTSIDE" strokeWidth="0.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status" GridPane.rowIndex="3" />
+                        <ComboBox fx:id="cboStatus" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                     </children>
+                  </GridPane>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="btnPrint" mnemonicParsing="false" onAction="#handlePrintButtonAction" text="Print" />
+                        <Button fx:id="btnSave" mnemonicParsing="false" onAction="#handleSaveButtonAction" text="Save" />
+                        <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Cancel" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children></AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="200.0">
+         <children>
+            <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" prefViewportHeight="365.0" prefViewportWidth="390.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <content>
+                  <GridPane id="gridStimulantDrink" fx:id="gridOrders" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              </GridPane>
+               </content>
+            </ScrollPane>
+         </children></AnchorPane>
+  </items>
+</SplitPane>

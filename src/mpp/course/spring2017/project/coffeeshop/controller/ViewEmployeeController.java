@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -80,22 +81,27 @@ public class ViewEmployeeController implements Initializable {
 	                        }
 	                        else
 	                        {
-	                            btn.setOnAction((ActionEvent event) ->
-	                            {
-	                            	Employee emp = getTableView().getItems().get(getIndex());
-	                            	Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure to delete " + emp.getFirstName() + " employee?", ButtonType.YES, ButtonType.NO);
-	                            	alert.showAndWait();
-	                            	if (alert.getResult() == ButtonType.YES) {
-	                            	    if(EmployeeDaoFactory.getInstance().deleteEmployee(emp)) {
-	                            	    	alert = new Alert(AlertType.INFORMATION, "Delete " + emp.getFirstName() + " employee successfully!", ButtonType.OK);
-	    	                            	alert.showAndWait();
-	    	                            	loadTableView();
-	                            	    }
-	                            	    else {
-	                            	    	alert = new Alert(AlertType.ERROR, "Failed to delete " + emp.getFirstName() + " employee!", ButtonType.OK);
-	    	                            	alert.showAndWait();
-	                            	    }	
-	                            	}
+	                            btn.setOnAction(new EventHandler<ActionEvent>(){
+	                                @Override
+	                                public void handle(ActionEvent t) {
+		                            	Employee emp = getSelectedEmployee();
+		                            	Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure to delete " + emp.getFirstName() + " employee?", ButtonType.YES, ButtonType.NO);
+		                            	alert.showAndWait();
+		                            	if (alert.getResult() == ButtonType.YES) {
+		                            	    if(EmployeeDaoFactory.getInstance().deleteEmployee(emp)) {
+		                            	    	alert = new Alert(AlertType.INFORMATION, "Delete " + emp.getFirstName() + " employee successfully!", ButtonType.OK);
+		    	                            	alert.showAndWait();
+		    	                            	loadTableView();
+		                            	    }
+		                            	    else {
+		                            	    	alert = new Alert(AlertType.ERROR, "Failed to delete " + emp.getFirstName() + " employee!", ButtonType.OK);
+		    	                            	alert.showAndWait();
+		                            	    }	
+		                            	}
+	                                }
+	                                Employee getSelectedEmployee() {
+	                                	return getTableView().getItems().get(getIndex());
+	                                }
 	                            });
 	                            setContentDisplay(ContentDisplay.CENTER);
 	                            setGraphic(btn);

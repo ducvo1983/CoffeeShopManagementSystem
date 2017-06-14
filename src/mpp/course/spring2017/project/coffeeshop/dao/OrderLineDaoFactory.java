@@ -27,4 +27,10 @@ public class OrderLineDaoFactory {
 	public OrderLine findOrderLine(String orderNo, int productID) {
 		return impl.findOrderLine(orderNo, productID);
 	}
+	public List<OrderLine> getOrderLines(int productID) {
+		return impl.getOrderLines(productID);
+	}
+	public boolean deleteOrderLines(String orderNo) {
+		return impl.deleteOrderLines(orderNo);
+	}
 }

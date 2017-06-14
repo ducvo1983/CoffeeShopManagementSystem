@@ -13,6 +13,7 @@ import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopLoginView;
 public class AdminController {	
 	@FXML BorderPane contentPane;
 	@FXML AnchorPane anchorPaneLeft;
+	@FXML AnchorPane anchorPaneRight;
 	private CoffeeShopLoginView coffeeShopLoginView = null;
 	private Account loginAccount = null;
 	
@@ -56,9 +57,23 @@ public class AdminController {
 		}
 	}
 
+	@FXML protected void handleOrders(ActionEvent event) {
+		try {
+			FXMLLoader loader = new FXMLLoader(AdminController.class.getResource("../view/FXMLOrderManagementForm.fxml")); //FXMLLoader.load(getClass().getResource("../view/FXMLNewEmployee.fxml"));
+			SplitPane newLoadedPane = (SplitPane) loader.load();
+			((OrderManagementController)loader.getController()).setLoginAccount(loginAccount);
+			contentPane.getChildren().clear();
+			contentPane.setCenter(newLoadedPane);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			//System.out.println(ex.getMessage());
+		}
+	}
+	
 	@FXML private void initialize() {
 		anchorPaneLeft.setMaxWidth(202);
 		anchorPaneLeft.setMinWidth(202);
+		contentPane.setMaxSize(anchorPaneRight.getWidth(), anchorPaneRight.getHeight());
 	}
 
 	public void setLoginView(CoffeeShopLoginView coffeeShopLoginView) {

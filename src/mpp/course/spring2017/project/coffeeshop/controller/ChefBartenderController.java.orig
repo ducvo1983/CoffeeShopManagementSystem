@@ -343,6 +343,7 @@ public class ChefBartenderController implements MessageListener {
 		//TextMessage tm = (TextMessage) msg;
 		//String msg = tm.getText(); //in case want to get value
 
+<<<<<<< HEAD
 		final Task<Void> task = new Task<Void>() {
 		     @Override protected Void call() throws Exception {
 		    	 Platform.runLater(new Runnable() {
@@ -354,5 +355,36 @@ public class ChefBartenderController implements MessageListener {
 		     }
 		 };
 		 new Thread(task).start();
+=======
+				     @Override protected Void call() throws Exception {
+				    	 System.out.println("task is running.........");
+				         //synchronized (has_message) {
+							//if (has_message) {
+								Platform.runLater(new Runnable() {
+					                 @Override public void run() {
+					                     load2GridPane(gridOrders);
+					                     System.out.println("task load new order");
+					                     //has_message = false;
+					                 }
+					             });
+							//}
+						//}
+				         return null;
+				     }
+				 };
+				 Thread t = new Thread(task);
+				 t.start();
+				 try {
+					 t.join();
+				 } catch (InterruptedException e) {
+					 
+				 }
+			//}
+			//load2GridPane(gridOrders);
+		//}
+		//catch (JMSException e) {
+		//	e.printStackTrace();
+		//}
+>>>>>>> 731f69db1f22c14a8ef6e2efa6dfe2103fa941fe
 	}
 }

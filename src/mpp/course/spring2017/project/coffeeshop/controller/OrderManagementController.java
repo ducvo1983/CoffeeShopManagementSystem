@@ -1,20 +1,16 @@
 package mpp.course.spring2017.project.coffeeshop.controller;
 
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.TextMessage;
+import java.util.ResourceBundle;
 
 import com.sun.prism.impl.Disposer.Record;
 
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -22,18 +18,13 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
@@ -44,88 +35,51 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Text;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import mpp.course.spring2017.project.coffeeshop.activemq.IMessageReceiver;
-import mpp.course.spring2017.project.coffeeshop.activemq.IMessageSender;
-import mpp.course.spring2017.project.coffeeshop.activemq.MessageReceiver;
-import mpp.course.spring2017.project.coffeeshop.activemq.MessageSender;
 import mpp.course.spring2017.project.coffeeshop.dao.BeverageSizePriceDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.CustomerOrderDaoFactory;
-import mpp.course.spring2017.project.coffeeshop.dao.ProductDaoFactory;
+import mpp.course.spring2017.project.coffeeshop.dao.OrderLineDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.TokenDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.model.Account;
 import mpp.course.spring2017.project.coffeeshop.model.BeverageSizePrice;
-import mpp.course.spring2017.project.coffeeshop.model.CashierModel;
 import mpp.course.spring2017.project.coffeeshop.model.CustomerOrder;
 import mpp.course.spring2017.project.coffeeshop.model.OrderLine;
 import mpp.course.spring2017.project.coffeeshop.model.Product;
 import mpp.course.spring2017.project.coffeeshop.model.Token;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopButton;
-import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopLoginView;
-import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopMenuItem;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopUtils;
 import mpp.course.spring2017.project.coffeeshop.view.PDFView;
 
-public class CashierController implements MessageListener {
+public class OrderManagementController implements Initializable {
 	@FXML private TableView<OrderTableItem> tblOrderLine;
 	@FXML private TableColumn<OrderTableItem,Product> colProduct;
 	@FXML private TableColumn<OrderTableItem,String> colSize;
 	@FXML private TableColumn<OrderTableItem,Double> colPrice;
 	@FXML private TableColumn<OrderTableItem,String> colQuantity;
 	@FXML private TableColumn<Record,Boolean> colDeleteButton;
-	@FXML private Tab tabStimulantDrink;
-	@FXML private Tab tabFruitDrink;
-	@FXML private Tab tabSoftDrink;
-	@FXML private Tab tabFood;
-	@FXML private GridPane gridStimulantDrink;
-	@FXML private GridPane gridFruitDrink;
-	@FXML private GridPane gridSoftDrink;
-	@FXML private GridPane gridFood;
 	@FXML private AnchorPane firstAnchorPane;
 	@FXML private TextField txtCustomer;
 	@FXML private ComboBox<Token> cboToken;
 	@FXML private ComboBox<String> cboOrderType;
 	@FXML private ComboBox<String> cboStatus;
-	@FXML private Label lblTax;
-	@FXML private Label lblTotal;
-	@FXML private Button btnNew;
-	@FXML private Button btnOrder;
+	@FXML private Text txtTax;
+	@FXML private Text txtTotal;
+	@FXML private Button btnCancel;
+	@FXML private Button btnSave;
 	@FXML private Button btnPrint;
+	@FXML private GridPane gridOrders;
 	
+	private final String CUSTOMER_IMAGE = "file:images/customer.png";
 	private final String IMAGE_DEL = "file:images/delete.png";
 	private final int COLS = 5;
-	private final int FOOD = 1;
-	private final int STIMULANT_DRINK = 2;
-	private final int FRUIT_DRINK = 3;
-	private final int SOFT_DRINK = 4;
 	private Account loginAccount = null;
-	private CashierModel model = new CashierModel();
-	
-	private IMessageSender msgSender = null;
-	private IMessageReceiver msgReceiver = null;
-	
-	public IMessageSender getMsgSender() {
-		return msgSender;
-	}
-
-	public void setMsgSender(IMessageSender msgSender) {
-		this.msgSender = msgSender;
-	}
-
-	public IMessageReceiver getMsgReceiver() {
-		return msgReceiver;
-	}
-
-	public void setMsgReceiver(IMessageReceiver msgReceiver) {
-		this.msgReceiver = msgReceiver;
-	}
-
+	private CustomerOrder curOrder = null;
 	public Account getLoginAccount() {
 		return loginAccount;
 	}
@@ -134,18 +88,16 @@ public class CashierController implements MessageListener {
 		this.loginAccount = loginAccount;
 	}
 
-	private CoffeeShopLoginView coffeeShopLoginView = null;
-	
 	void calculateTotal() {
 		double total = 0;
 		for(OrderTableItem item : data) {
 			total += (item.getProductPrice().get() * Integer.parseInt(item.getQuantity().get()));
 		}
 		total += (total * 0.07);
-		lblTotal.setText(String.valueOf(total));
+		txtTotal.setText(String.valueOf(total));
 	}
 	
-	private void load2GridPane(int categoryID, GridPane target) {
+	private void load2GridPane(GridPane target) {
 		if (target.getColumnConstraints() != null)
 			target.getColumnConstraints().clear();
 		if (target.getRowConstraints() != null)
@@ -154,9 +106,9 @@ public class CashierController implements MessageListener {
 			target.getChildren().clear();
 		}
 		// Add row and column
-		List<Product> products = ProductDaoFactory.getInstance().getProducts(categoryID);
- 		int ROWS = products.size() / COLS;
- 		if ((products.size() % COLS) != 0) ROWS += 1; 
+		List<CustomerOrder> orders = CustomerOrderDaoFactory.getInstance().getAllCustomerOrders();
+ 		int ROWS = orders.size() / COLS;
+ 		if ((orders.size() % COLS) != 0) ROWS += 1; 
 		for (int i = 0; i < COLS; i++) {
 		     ColumnConstraints colConst = new ColumnConstraints();
 		     target.getColumnConstraints().add(colConst);
@@ -168,64 +120,57 @@ public class CashierController implements MessageListener {
 
 		int pos = 0;
 		for (int i = 0; i < ROWS; i++) {
-			if (pos >= products.size()) break;
+			if (pos >= orders.size()) break;
 			for (int j = 0; j < COLS; j++) {
-				if (pos >= products.size()) break;
-				Product p = products.get(pos++);
-				Button btn = new CoffeeShopButton(p.getName(), new ImageView(CoffeeShopUtils.convertByteArray2JavaFXImage(p.getImage(), 100,100)), p);
+				if (pos >= orders.size()) break;
+				CustomerOrder p = orders.get(pos++);
+				Button btn = new CoffeeShopButton(p.getOrderNo() + "(" + p.getCustomerName() + ")", new ImageView(new Image(CUSTOMER_IMAGE)), p);
 				btn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 				btn.setContentDisplay(ContentDisplay.TOP);
-				ContextMenu contextMenu = new ContextMenu();
-				if (p.getProductCatelogy().getID() == STIMULANT_DRINK ||
-			    	p.getProductCatelogy().getID() == FRUIT_DRINK) {
-	            	// Create ContextMenu
-			        List<BeverageSizePrice> bsps = BeverageSizePriceDaoFactory.getInstance().getBeverageSizePrices(p.getID());
-			        if (bsps != null) {
-			        	for (BeverageSizePrice bsp : bsps) {
-			        		MenuItem item = new CoffeeShopMenuItem(bsp.getBeverageSize().getDescription(), new Object[] {p, bsp});
-			        		item.setOnAction(new EventHandler<ActionEvent>() {
-			                    @Override
-			                    public void handle(ActionEvent event) {
-			                    	if (model.getCurrentOrder() == null) {
-				                        CoffeeShopMenuItem item = (CoffeeShopMenuItem) event.getSource();
-				                        CashierController.this.updateOrInsertRow((Product) item.getObject(0), (BeverageSizePrice) item.getObject(1));
-				                        calculateTotal();
-			                    	} else {
-			                    		CoffeeShopUtils.showErrorMessgge("The order is already in handling");
-			                    	}
-			                    }
-			                });
-			        		contextMenu.getItems().add(item);
-			        	}
-			        }
-				}
-				
-				btn.setOnMousePressed(new EventHandler<MouseEvent>() {
-				    @Override
-				    public void handle(MouseEvent event) {
-				        if (event.isPrimaryButtonDown()) {
-				        	CoffeeShopButton cfBtn = ((CoffeeShopButton) event.getSource());
-				        	Product selectedProd = (Product) cfBtn.getObject();
-				            if (selectedProd.getProductCatelogy().getID() == STIMULANT_DRINK ||
-				            	selectedProd.getProductCatelogy().getID() == FRUIT_DRINK) {
-				        		contextMenu.show(cfBtn, event.getScreenX(), event.getScreenY());
-				        	} else {
-				        		if (model.getCurrentOrder() == null) {
-				        			CashierController.this.updateOrInsertRow(selectedProd, null);
-				        			calculateTotal();
-				        		} else {
-		                    		CoffeeShopUtils.showErrorMessgge("The order is already in handling");
-		                    	}
-				        	}
-				        }
-				    }
-				});
+				btn.setOnAction(new EventHandler<ActionEvent>() {
+		            @Override
+		            public void handle(ActionEvent e) {
+		            	curOrder = (CustomerOrder) ((CoffeeShopButton)e.getSource()).getObject();
+		                loadOrder(curOrder);
+		            }
+		        });
 				target.add(btn, j, i);
 			}
 		}
 	}
 
-
+	private void loadOrder(CustomerOrder co) {
+		txtCustomer.setText(co.getCustomerName());
+		cboOrderType.setValue(co.getOrderType());
+		cboToken.setValue(co.getToken());
+		cboStatus.setValue(co.getStatus());
+		txtTotal.setText(String.valueOf(co.getAmount()));
+		data.clear();
+		List<OrderLine> odls = co.getListOrderLine();//OrderLineDaoFactory.getInstance().getOrderLines(co.getOrderNo());
+		if (odls != null) {
+			for (OrderLine odl : odls) {
+				List<BeverageSizePrice> bsps = BeverageSizePriceDaoFactory.getInstance().getBeverageSizePrices(odl.getProduct().getID());
+				if (bsps == null) {
+					addRow(odl, null);
+				} else {
+					boolean found = false;
+					if (bsps.size() > 0) {
+						for (BeverageSizePrice bsp : bsps) {
+							if (bsp.getBeverageSize().getDescription().equals(odl.getBeverageSize())) {
+								addRow(odl, bsp);
+								found = true;
+								break;
+							}
+						}
+					}
+					
+					if (!found) {
+						addRow(odl, null);
+					}
+				}
+			}
+		}
+	}
 	//Define the delete button cell
     private class DelButtonCell extends TableCell<Record, Boolean> {
         final Button delButton = new Button("", new ImageView(new Image(IMAGE_DEL)));
@@ -349,49 +294,17 @@ public class CashierController implements MessageListener {
 		});
 		cboStatus.setItems(statuses);
 		//loginAccount = AccountDaoFactory.getInstance().findAccount("tri");
-		lblTax.setText("7%");
-		model.setCurrentOrder(null);
-		model.setNewOrder(true);
-		btnOrder.setDisable(false);
-		btnPrint.setDisable(true);
+		//txtTax.setText("7%");
+		//btnSave.setDisable(false);
+		//btnPrint.setDisable(true);
 
-	}
-	
-	@FXML
-	void initialize(){
-		initializeTableView();
-		initializeOthers();
-		handleSelectionChanged(null);
-		/*load2GridPane(STIMULANT_DRINK, gridStimulantDrink);
-        load2GridPane(FRUIT_DRINK, gridFruitDrink);
-        load2GridPane(SOFT_DRINK, gridSoftDrink);
-        load2GridPane(FOOD, gridFood);*/
-        
-        try {
-        	//new activemq message sender to send new order to chef/bartender user
-        	msgSender = new MessageSender(CoffeeShopUtils.getConfig("activeMQ_URL"), CoffeeShopUtils.getConfig("orderQName"));
-            if(!msgSender.createConnection()) {
-	        	System.out.println("Failed to create connection to ActiveMQ for order queue.");
-	        }
-            
-            //new activemq message receiver to receive new item from admin user
-            msgReceiver = new MessageReceiver(CoffeeShopUtils.getConfig("activeMQ_URL"), CoffeeShopUtils.getConfig("productQName"));
-			if(!msgReceiver.createConnection()) {
-				System.out.println("Failed to create connection to ActiveMQ for product queue.");
-			} 
-			else {
-				msgReceiver.registerListener(this);
-			}
-        }
-        catch(JMSException jmsEx) {
-        	jmsEx.printStackTrace();
-        }
 	}
 
 	private ObservableList<OrderTableItem> data;
 
-	public void addRow(Product p, BeverageSizePrice bsp){        
+	public void addRow(OrderLine o, BeverageSizePrice bsp){        
 	    try{      
+	    		Product p = o.getProduct();
 	            OrderTableItem odl = new OrderTableItem();
 	            odl.getProduct().set(p);
 	            if (bsp == null) {
@@ -401,7 +314,7 @@ public class CashierController implements MessageListener {
 	            	odl.getProductSize().set(bsp.getBeverageSize().getDescription());
 	            	odl.getProductPrice().set(new Double(bsp.getUnitPrice()));
 	            }
-	            odl.getQuantity().set(String.valueOf(1));
+	            odl.getQuantity().set(String.valueOf(o.getQuantity()));
 	            data.add(odl);                  
 	            tblOrderLine.setItems(data);
 	    }
@@ -411,9 +324,10 @@ public class CashierController implements MessageListener {
 	    }
 	}
 	
-	public void updateOrInsertRow(Product p, BeverageSizePrice bsp) {
+	public void updateOrInsertRow(OrderLine o, BeverageSizePrice bsp) {
 		try{      
             boolean found = false;
+            Product p = o.getProduct();
             for (OrderTableItem odl : data) {
             	if (odl.getProduct().get().getName().equals(p.getName())) {
             		odl.getProduct().set(p);
@@ -434,7 +348,7 @@ public class CashierController implements MessageListener {
             	}
             }
             if (!found) {
-            	addRow(p, bsp);
+            	addRow(o, bsp);
             } else {
             	tblOrderLine.refresh();
             }
@@ -445,19 +359,6 @@ public class CashierController implements MessageListener {
 	    }
 	}
 	
-	@FXML
-	public void handleSelectionChanged(Event t) {
-		if (tabStimulantDrink.isSelected()) {
-			load2GridPane(STIMULANT_DRINK, gridStimulantDrink);
-		} else if (tabFruitDrink.isSelected()) {
-			load2GridPane(FRUIT_DRINK, gridFruitDrink);
-		} else if (tabSoftDrink.isSelected()) {
-			load2GridPane(SOFT_DRINK, gridSoftDrink);
-		} else if (tabFood.isSelected()) {
-			load2GridPane(FOOD, gridFood);
-		}
-    }
-	
 	void clearOrder() {
 		data.clear();
 		tblOrderLine.refresh();
@@ -465,8 +366,9 @@ public class CashierController implements MessageListener {
 		cboToken.getSelectionModel().selectFirst();
 		cboOrderType.getSelectionModel().selectFirst();
 		cboStatus.getSelectionModel().selectFirst();
-		//lblTax.setText("0.0");
-		lblTotal.setText("0.0");
+		//txtTax.setText("0.0");
+		txtTotal.setText("0.0");
+		curOrder = null;
 	}
 	
 	boolean validateFields() {
@@ -490,25 +392,25 @@ public class CashierController implements MessageListener {
 			CoffeeShopUtils.showErrorMessgge("Please select the product first");
 			return false;
 		}
-		
 		return true;
 	}
 	String generateOrderNo() {
 		return LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
 	}
 	
-	void fillCustomerOrderData(CustomerOrder o) {
+	CustomerOrder buildNewCustomerOrder() {
+		CustomerOrder o = curOrder;
 		o.setCustomerName(txtCustomer.getText());
 		o.setAccount(loginAccount);
-		o.setAmount(Float.parseFloat(lblTotal.getText()));
+		o.setAmount(Float.parseFloat(txtTotal.getText()));
 		o.setListOrderLine(getOrderLines());
 		o.setOrderDate(LocalDate.now());
-		o.setOrderNo(generateOrderNo());
 		o.setOrderType(cboOrderType.getSelectionModel().getSelectedItem());
-		o.setStatus(cboStatus.getValue());
+		o.setStatus(cboStatus.getSelectionModel().getSelectedItem());
 		o.setTax(0.07f);
 		o.setToken(cboToken.getValue());
 		o.setUpdateTime(LocalDate.now());
+		return o;
 	}
 	
 	List<OrderLine> getOrderLines() {
@@ -518,76 +420,45 @@ public class CashierController implements MessageListener {
 		}
 		return orderLines;
 	}
-	@FXML protected void handleNewButtonAction(ActionEvent event) {
-		clearOrder();
-		model.setCurrentOrder(null);
-		model.setNewOrder(true);
-		btnOrder.setDisable(false);
-		btnPrint.setDisable(true);
+	@FXML protected void handleCancelButtonAction(ActionEvent event) {
+		if (curOrder != null) {
+			OrderLineDaoFactory.getInstance().deleteOrderLines(curOrder.getOrderNo());
+			CustomerOrderDaoFactory.getInstance().deleteCustomerOrder(curOrder);
+			clearOrder();
+			load2GridPane(gridOrders);
+		}
     }
 	
-	void updateButtonStatesAfterOrdering() {
-		btnOrder.setDisable(true);
-		btnPrint.setDisable(false);
-	}
-	
-	@FXML protected void handleOrderButtonAction(ActionEvent event) {
+	@FXML protected void handleSaveButtonAction(ActionEvent event) {
 		if (validateFields()) {
-			CustomerOrder co = new CustomerOrder();
-			fillCustomerOrderData(co);
-			boolean flag = CustomerOrderDaoFactory.getInstance().insertNewCustomerOrder(co);
-			model.setCurrentOrder(co);
-			model.setNewOrder(false);
-			updateButtonStatesAfterOrdering();
-			
-			try {
-				if(flag) msgSender.sendMessage(co.getOrderNo());
-			}
-			catch(JMSException jmsEx) {
-				jmsEx.printStackTrace();
+			if (curOrder != null) {
+				CustomerOrder co = buildNewCustomerOrder();
+				CustomerOrderDaoFactory.getInstance().updateCustomerOrder(co);
+			} else {
+				CoffeeShopUtils.showErrorMessgge("Please select an order");
 			}
 		}
 	}
 
-	public void setLoginView(CoffeeShopLoginView coffeeShopLoginView) {
-		this.coffeeShopLoginView = coffeeShopLoginView;
-	}
 	
-	public void showParent() {
-		if (coffeeShopLoginView != null) {
-			coffeeShopLoginView.unhide();
-		}
-	}
-	
-	@FXML private void print(ActionEvent event) {
+	@FXML private void handlePrintButtonAction(ActionEvent event) {
 		try {
-				CustomerOrder co = model.getCurrentOrder();
-				if (co != null) {
-		            PDFView pdfV = new PDFView();
-		            pdfV.show("PDF");
-		            ((PDFReportController)pdfV.getLoader().getController()).showPDF(co);
-				}
-			} catch (IOException e) {
+			if (curOrder != null) {
+	            PDFView pdfV = new PDFView();
+	            pdfV.show("PDF");
+	            ((PDFReportController)pdfV.getLoader().getController()).showPDF(curOrder);
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
-	public void onMessage(Message msg) {
-		if (!(msg instanceof TextMessage)) throw new RuntimeException("no text message");
-		//TextMessage tm = (TextMessage) msg;
-		//String msg = tm.getText(); //in case want to get value
 
-		final Task<Void> task = new Task<Void>() {
-		     @Override protected Void call() throws Exception {
-		    	 Platform.runLater(new Runnable() {
-	                 @Override public void run() {
-	                	 handleSelectionChanged(null);
-	                 }
-	             });
-		         return null;
-		     }
-		 };
-		 new Thread(task).start();
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		// TODO Auto-generated method stub
+		initializeTableView();
+		initializeOthers();
+        load2GridPane(gridOrders);
+		
 	}
 }

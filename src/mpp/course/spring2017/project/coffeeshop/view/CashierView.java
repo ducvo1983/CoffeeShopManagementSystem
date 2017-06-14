@@ -38,7 +38,7 @@ public class CashierView {
             }
         });
         stage.show();
-        stage.setResizable(false);
+        //stage.setResizable(false);
 	}
 	
 	public void unhide() {

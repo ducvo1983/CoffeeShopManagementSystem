@@ -28,6 +28,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
@@ -36,12 +37,14 @@
                         <Label text="Token" GridPane.rowIndex="2" />
                         <TextField fx:id="txtCustomer" GridPane.columnIndex="1" />
                         <ComboBox fx:id="cboOrderType" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="Tax" GridPane.rowIndex="3" />
-                        <Label fx:id="lblTax" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label text="Total" GridPane.rowIndex="4" />
-                        <Label fx:id="lblTotal" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label text="Tax" GridPane.rowIndex="4" />
+                        <Label fx:id="lblTax" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label text="Total" GridPane.rowIndex="5" />
+                        <Label fx:id="lblTotal" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Label text="Order type" GridPane.rowIndex="1" />
                         <ComboBox fx:id="cboToken" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="Status" GridPane.rowIndex="3" />
+                        <ComboBox fx:id="cboStatus" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
                   <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
@@ -63,13 +66,13 @@
                </children>
             </GridPane>
          </children></AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="200.0">
+    <AnchorPane minHeight="0.0" minWidth="0.0">
          <children>
             <TabPane prefHeight="398.0" prefWidth="390.0" stylesheets="@tabpane.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <tabs>
                 <Tab fx:id="tabStimulantDrink" onSelectionChanged="#handleSelectionChanged" text="Stimulant drink">
                   <content>
-                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" prefViewportHeight="365.0" prefViewportWidth="390.0" vbarPolicy="ALWAYS">
+                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" prefHeight="160.0" prefViewportHeight="390.0" prefViewportWidth="390.0" prefWidth="200.0" vbarPolicy="ALWAYS">
                            <content>
                               <GridPane id="gridStimulantDrink" fx:id="gridStimulantDrink" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                               </GridPane>

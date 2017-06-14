@@ -31,7 +31,9 @@ public class HibernateFactory {
 	}
 	
 	public void closeSession() {
-		sf.close();
+		if (sf != null && sf.isOpen()) {
+			sf.close();
+		}
 	}
 	public static boolean newEmployee(Employee e) {
 		try {			
