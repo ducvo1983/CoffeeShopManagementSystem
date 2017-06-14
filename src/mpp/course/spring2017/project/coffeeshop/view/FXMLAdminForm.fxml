@@ -10,7 +10,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.text.*?>
 
-<SplitPane dividerPositions="0.3253968253968254" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mpp.course.spring2017.project.coffeeshop.controller.AdminController">
+<SplitPane dividerPositions="0.27058823529411763" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mpp.course.spring2017.project.coffeeshop.controller.AdminController">
    <items>
       <AnchorPane fx:id="anchorPaneLeft" prefHeight="479.0" prefWidth="257.0" SplitPane.resizableWithParent="false">
          <children>
@@ -54,9 +54,9 @@
             </VBox>
          </children>
       </AnchorPane>
-      <AnchorPane prefHeight="479.0" prefWidth="353.0">
+      <AnchorPane fx:id="anchorPaneRight" prefWidth="500.0">
          <children>
-            <BorderPane fx:id="contentPane" layoutY="6.0" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="6.0" />
+            <BorderPane fx:id="contentPane" layoutY="6.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children></AnchorPane>
    </items>
 </SplitPane>

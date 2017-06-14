@@ -7,13 +7,17 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import jfxtras.labs.scene.layout.VBox;
 import mpp.course.spring2017.project.coffeeshop.model.Account;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopLoginView;
 
 public class AdminController {	
 	@FXML BorderPane contentPane;
 	@FXML AnchorPane anchorPaneLeft;
+	@FXML AnchorPane anchorPaneRight;
 	private CoffeeShopLoginView coffeeShopLoginView = null;
 	private Account loginAccount = null;
 	
@@ -73,6 +77,7 @@ public class AdminController {
 	@FXML private void initialize() {
 		anchorPaneLeft.setMaxWidth(202);
 		anchorPaneLeft.setMinWidth(202);
+		contentPane.setMaxSize(anchorPaneRight.getWidth(), anchorPaneRight.getHeight());
 	}
 
 	public void setLoginView(CoffeeShopLoginView coffeeShopLoginView) {
