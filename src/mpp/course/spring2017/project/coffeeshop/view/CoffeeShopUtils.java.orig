@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 
 public class CoffeeShopUtils {
+<<<<<<< HEAD
 	public static String getConfig(String config) {
 		String value = "";
 		InputStream input = null;
@@ -48,6 +49,11 @@ public class CoffeeShopUtils {
 		return value;
 	}
 
+=======
+	public final static String SERVER_URL = "tcp://10.0.0.22:61616";
+	public final static String QUEUE_NAME = "orderQ";
+	
+>>>>>>> 731f69db1f22c14a8ef6e2efa6dfe2103fa941fe
 	public static Image convertByteArray2JavaFXImage(byte[] raw, final int width, final int height) {
         WritableImage image = new WritableImage(width, height);
         try {

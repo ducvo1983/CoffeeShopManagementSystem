@@ -2,6 +2,8 @@ package mpp.course.spring2017.project.coffeeshop.view;
 
 import java.io.IOException;
 
+import javax.jms.JMSException;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,6 +28,13 @@ public class ChefBartenderView {
         stage.setFullScreen(true);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
+            	try {
+            		((ChefBartenderController) loader.getController()).getMsgReceiver().closeConnection();
+            	}
+            	catch(JMSException jmsEx) {
+            		jmsEx.printStackTrace();
+            	}
+            	
                 ((ChefBartenderController) loader.getController()).showParent();
             }
         });

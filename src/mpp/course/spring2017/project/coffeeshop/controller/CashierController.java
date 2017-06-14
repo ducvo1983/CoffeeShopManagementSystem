@@ -8,9 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
 
 import com.sun.prism.impl.Disposer.Record;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -18,6 +22,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -46,7 +51,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import mpp.course.spring2017.project.coffeeshop.activemq.IMessageReceiver;
 import mpp.course.spring2017.project.coffeeshop.activemq.IMessageSender;
+import mpp.course.spring2017.project.coffeeshop.activemq.MessageReceiver;
 import mpp.course.spring2017.project.coffeeshop.activemq.MessageSender;
 import mpp.course.spring2017.project.coffeeshop.dao.BeverageSizePriceDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.CustomerOrderDaoFactory;
@@ -65,7 +72,7 @@ import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopMenuItem;
 import mpp.course.spring2017.project.coffeeshop.view.CoffeeShopUtils;
 import mpp.course.spring2017.project.coffeeshop.view.PDFView;
 
-public class CashierController {
+public class CashierController implements MessageListener {
 	@FXML private TableView<OrderTableItem> tblOrderLine;
 	@FXML private TableColumn<OrderTableItem,Product> colProduct;
 	@FXML private TableColumn<OrderTableItem,String> colSize;
@@ -100,8 +107,25 @@ public class CashierController {
 	private Account loginAccount = null;
 	private CashierModel model = new CashierModel();
 	
-	IMessageSender msgSender;
+	private IMessageSender msgSender = null;
+	private IMessageReceiver msgReceiver = null;
 	
+	public IMessageSender getMsgSender() {
+		return msgSender;
+	}
+
+	public void setMsgSender(IMessageSender msgSender) {
+		this.msgSender = msgSender;
+	}
+
+	public IMessageReceiver getMsgReceiver() {
+		return msgReceiver;
+	}
+
+	public void setMsgReceiver(IMessageReceiver msgReceiver) {
+		this.msgReceiver = msgReceiver;
+	}
+
 	public Account getLoginAccount() {
 		return loginAccount;
 	}
@@ -343,12 +367,21 @@ public class CashierController {
         load2GridPane(SOFT_DRINK, gridSoftDrink);
         load2GridPane(FOOD, gridFood);*/
         
-        //new activemq message sender
-        msgSender = new MessageSender(CoffeeShopUtils.SERVER_URL, CoffeeShopUtils.QUEUE_NAME);
         try {
-	        if(!msgSender.createConnection()) {
-	        	System.out.println("Failed to create connection to ActiveMQ.");
+        	//new activemq message sender to send new order to chef/bartender user
+        	msgSender = new MessageSender(CoffeeShopUtils.getConfig("activeMQ_URL"), CoffeeShopUtils.getConfig("orderQName"));
+            if(!msgSender.createConnection()) {
+	        	System.out.println("Failed to create connection to ActiveMQ for order queue.");
 	        }
+            
+            //new activemq message receiver to receive new item from admin user
+            msgReceiver = new MessageReceiver(CoffeeShopUtils.getConfig("activeMQ_URL"), CoffeeShopUtils.getConfig("productQName"));
+			if(!msgReceiver.createConnection()) {
+				System.out.println("Failed to create connection to ActiveMQ for product queue.");
+			} 
+			else {
+				msgReceiver.registerListener(this);
+			}
         }
         catch(JMSException jmsEx) {
         	jmsEx.printStackTrace();
@@ -537,5 +570,24 @@ public class CashierController {
 			} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void onMessage(Message msg) {
+		if (!(msg instanceof TextMessage)) throw new RuntimeException("no text message");
+		//TextMessage tm = (TextMessage) msg;
+		//String msg = tm.getText(); //in case want to get value
+
+		final Task<Void> task = new Task<Void>() {
+		     @Override protected Void call() throws Exception {
+		    	 Platform.runLater(new Runnable() {
+	                 @Override public void run() {
+	                	 handleSelectionChanged(null);
+	                 }
+	             });
+		         return null;
+		     }
+		 };
+		 new Thread(task).start();
 	}
 }

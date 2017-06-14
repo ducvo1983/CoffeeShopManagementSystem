@@ -1,6 +1,5 @@
 package mpp.course.spring2017.project.coffeeshop.controller;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
@@ -9,11 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.imageio.ImageIO;
+import javax.jms.JMSException;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -34,6 +32,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import mpp.course.spring2017.project.coffeeshop.activemq.IMessageSender;
+import mpp.course.spring2017.project.coffeeshop.activemq.MessageSender;
 import mpp.course.spring2017.project.coffeeshop.dao.BeverageSizeDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.BeverageSizePriceDaoFactory;
 import mpp.course.spring2017.project.coffeeshop.dao.OrderLineDaoFactory;
@@ -92,6 +92,16 @@ public class ProductController implements Initializable {
 	@FXML private FileChooser imageChooser;
 	@FXML private Label lblError;
 	
+	private IMessageSender msgSender;
+	
+	public IMessageSender getMsgSender() {
+		return msgSender;
+	}
+
+	public void setMsgSender(IMessageSender msgSender) {
+		this.msgSender = msgSender;
+	}
+
 	@Override
     public void initialize(URL url, ResourceBundle rb) {
 		imageChooser = new FileChooser();
@@ -157,6 +167,17 @@ public class ProductController implements Initializable {
             	}
             }
         });
+        
+      //new activemq message sender
+        try {
+        	msgSender = new MessageSender(CoffeeShopUtils.getConfig("activeMQ_URL"), CoffeeShopUtils.getConfig("productQName"));
+            if(!msgSender.createConnection()) {
+	        	System.out.println("Failed to create connection to ActiveMQ.");
+	        }
+        }
+        catch(JMSException jmsEx) {
+        	jmsEx.printStackTrace();
+        }
 	}
 	
 	private boolean validateForm() {
@@ -338,6 +359,15 @@ public class ProductController implements Initializable {
 		}
 	}
 	
+	private void sendToProductQ() {
+		try {
+			msgSender.sendMessage("Product");
+		}
+		catch(JMSException jmsEx) {
+			jmsEx.printStackTrace();
+		}
+	}
+	
 	@FXML protected void browseFile(MouseEvent event) {
 		try {  
 			imageChooser.setTitle("Open Resource File");
@@ -412,10 +442,8 @@ public class ProductController implements Initializable {
 		try {
 			selectedProd.setName(txtName.getText().trim());
 			if(!txtUnitPrice.getText().trim().equals("")) selectedProd.setUnitPrice(Float.parseFloat(txtUnitPrice.getText().trim()));
-			else selectedProd.setUnitPrice(null);
-			ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-			ImageIO.write(SwingFXUtils.fromFXImage(imageProduct.getImage(), null), "png", byteOutput);
-			selectedProd.setImage(byteOutput.toByteArray());
+			else selectedProd.setUnitPrice(null);			
+			selectedProd.setImage(CoffeeShopUtils.convertJavaFXImage2ByteArray(imageProduct));
 			if(flagEdit) prodCategoryID = selectedProd.getProductCatelogy().getID();
 			selectedProd.setProductCatelogy(chBoxCategory.getValue().getKey());
 			if(!flagEdit) prodCategoryID = selectedProd.getProductCatelogy().getID();
@@ -425,12 +453,16 @@ public class ProductController implements Initializable {
 			if(!txtUnitPrice.getText().trim().equals("")) {
 				if(flagEdit) {
 					if(ProductDaoFactory.getInstance().updateProduct(selectedProd)) {
+						sendToProductQ();
+						
 						alert = new Alert(AlertType.INFORMATION, "Update the product successfully!", ButtonType.OK);
 			        	alert.showAndWait();
 					}
 				}
 				else {
 					if(ProductDaoFactory.getInstance().newProduct(selectedProd)) {
+						sendToProductQ();
+						
 						alert = new Alert(AlertType.INFORMATION, "Create the new product successfully!", ButtonType.OK);
 			        	alert.showAndWait();
 			        	resetProduct(event);
@@ -462,12 +494,16 @@ public class ProductController implements Initializable {
 				
 				if(flagEdit) {
 					if(ProductDaoFactory.getInstance().updateProductWithSizePrice(selectedProd, listBSP)) {
+						sendToProductQ();
+						
 						alert = new Alert(AlertType.INFORMATION, "Update the product successfully!", ButtonType.OK);
 			        	alert.showAndWait();
 					}
 				}
 				else {
 					if(ProductDaoFactory.getInstance().newProductWithSizePrice(selectedProd, listBSP)) {
+						sendToProductQ();
+						
 						alert = new Alert(AlertType.INFORMATION, "Create the new product successfully!", ButtonType.OK);
 			        	alert.showAndWait();
 			        	resetProduct(event);
